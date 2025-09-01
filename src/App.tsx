@@ -805,9 +805,15 @@ const Dashboard = ({ equipment, inspections, onDeleteEquipment, onAddEquipment }
 
         <div className="mt-8">
           <CsvImport onEquipmentImport={(newEquipment) => {
-            // Hier würden die Geräte zur lokalen Liste hinzugefügt
-            // Da dies eine Demo-App ist, zeigen wir nur eine Bestätigung
-            console.log('Importierte Geräte:', newEquipment);
+            // Neue Geräte zur bestehenden Liste hinzufügen
+            setEquipment(prev => {
+              const updatedEquipment = [...prev, ...newEquipment];
+              // In localStorage speichern
+              localStorage.setItem('equipment', JSON.stringify(updatedEquipment));
+              return updatedEquipment;
+            });
+            
+            // Bestätigung anzeigen
             alert(`${newEquipment.length} Geräte wurden erfolgreich importiert!`);
           }} />
         </div>
@@ -1365,11 +1371,23 @@ const InspectionForm = ({ equipment, inspections, onSave }: {
 };
 
 function App() {
-  const [equipment, setEquipment] = useState<Equipment[]>(mockEquipment);
+  // Beim Start Geräte aus localStorage laden, falls vorhanden
+  const [equipment, setEquipment] = useState<Equipment[]>(() => {
+    const savedEquipment = localStorage.getItem('equipment');
+    if (savedEquipment) {
+      return JSON.parse(savedEquipment);
+    }
+    return mockEquipment;
+  });
   const [inspections, setInspections] = useState<Inspection[]>(mockInspections);
 
   const deleteEquipment = (id: string) => {
-    setEquipment(prev => prev.filter(eq => eq.id !== id));
+    setEquipment(prev => {
+      const updatedEquipment = prev.filter(eq => eq.id !== id);
+      // In localStorage speichern
+      localStorage.setItem('equipment', JSON.stringify(updatedEquipment));
+      return updatedEquipment;
+    });
     // Auch zugehörige Prüfungen löschen
     setInspections(prev => prev.filter(insp => insp.equipmentId !== id));
   };
