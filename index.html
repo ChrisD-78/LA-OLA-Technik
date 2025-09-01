@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Freizeitbad LA OLA - Technik Dokumentation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .water-animation {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, 
+                rgba(102, 126, 234, 0.8) 0%, 
+                rgba(118, 75, 162, 0.8) 25%,
+                rgba(64, 224, 208, 0.6) 50%,
+                rgba(72, 187, 255, 0.7) 75%,
+                rgba(102, 126, 234, 0.8) 100%);
+            background-size: 400% 400%;
+            animation: waterFlow 8s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        @keyframes waterFlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .bubbles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bubble {
+            position: absolute;
+            bottom: -100px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            opacity: 0.7;
+            animation: rise 6s infinite ease-in-out;
+        }
+
+        .bubble:nth-child(1) { width: 40px; height: 40px; left: 10%; animation-delay: 0s; }
+        .bubble:nth-child(2) { width: 20px; height: 20px; left: 20%; animation-delay: 2s; }
+        .bubble:nth-child(3) { width: 50px; height: 50px; left: 35%; animation-delay: 4s; }
+        .bubble:nth-child(4) { width: 80px; height: 80px; left: 50%; animation-delay: 0s; }
+        .bubble:nth-child(5) { width: 35px; height: 35px; left: 65%; animation-delay: 3s; }
+        .bubble:nth-child(6) { width: 45px; height: 45px; left: 80%; animation-delay: 1s; }
+        .bubble:nth-child(7) { width: 25px; height: 25px; left: 90%; animation-delay: 5s; }
+
+        @keyframes rise {
+            0% {
+                bottom: -100px;
+                transform: translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                bottom: 1080px;
+                transform: translateX(-200px);
+                opacity: 0;
+            }
+        }
+
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(25px);
+            border-radius: 30px;
+            padding: 60px 40px;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            max-width: 600px;
+            width: 90%;
+            transform: translateY(0);
+            transition: all 0.3s ease;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 35px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            filter: drop-shadow(0 0 20px rgba(72, 187, 255, 0.5));
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            line-height: 1.2;
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 40px;
+            font-weight: 400;
+            text-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .main-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            background: linear-gradient(135deg, #48bbff 0%, #40e0d0 100%);
+            color: white;
+            font-size: 1.4rem;
+            font-weight: 600;
+            padding: 20px 50px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 15px 35px rgba(72, 187, 255, 0.4);
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            min-width: 300px;
+        }
+
+        .main-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .main-button:hover::before {
+            left: 100%;
+        }
+
+        .main-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 45px rgba(72, 187, 255, 0.6);
+            background: linear-gradient(135deg, #40e0d0 0%, #48bbff 100%);
+        }
+
+        .main-button:active {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 25px rgba(72, 187, 255, 0.4);
+        }
+
+        .main-button i {
+            font-size: 1.6rem;
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+        }
+
+        .features {
+            margin-top: 40px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+        }
+
+        .feature {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .feature:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .feature i {
+            font-size: 2rem;
+            color: #48bbff;
+            margin-bottom: 10px;
+            filter: drop-shadow(0 0 10px rgba(72, 187, 255, 0.5));
+        }
+
+        .feature h3 {
+            font-size: 1rem;
+            color: white;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .feature p {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.4;
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 40px 30px;
+                margin: 20px;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .main-button {
+                font-size: 1.2rem;
+                padding: 18px 40px;
+                min-width: 280px;
+            }
+            
+            .features {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+        }
+
+        .loading {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 3px solid #48bbff;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="water-animation"></div>
+    
+    <div class="bubbles">
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+    </div>
+
+    <div class="container">
+        <div class="logo">🏊‍♂️</div>
+        <h1>Freizeitbad LA OLA</h1>
+        <p class="subtitle">Technik Dokumentation</p>
+        
+        <a href="http://localhost:3000" class="main-button" id="startButton">
+            <i class="fas fa-rocket"></i>
+            System starten
+        </a>
+        
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p style="color: white; margin-top: 10px;">System wird gestartet...</p>
+        </div>
+
+        <div class="features">
+            <div class="feature">
+                <i class="fas fa-cogs"></i>
+                <h3>Anlagen</h3>
+                <p>Verwalten Sie alle technischen Anlagen</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-clipboard-check"></i>
+                <h3>Prüfungen</h3>
+                <p>Dokumentieren Sie Wartungen & Prüfungen</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-chart-line"></i>
+                <h3>Übersicht</h3>
+                <p>Behalten Sie den Überblick über alles</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>© 2024 Freizeitbad LA OLA - Technik Dokumentation</p>
+    </div>
+
+    <script>
+        document.getElementById('startButton').addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const button = this;
+            const loading = document.getElementById('loading');
+            
+            // Zeige Loading-Animation
+            button.style.display = 'none';
+            loading.style.display = 'block';
+            
+            // Prüfe zuerst ob Server läuft
+            fetch('http://localhost:3000')
+                .then(response => {
+                    if (response.ok) {
+                        // Server läuft - direkt weiterleiten
+                        window.location.href = 'http://localhost:3000';
+                    } else {
+                        throw new Error('Server nicht erreichbar');
+                    }
+                })
+                .catch(() => {
+                    // Server läuft nicht
+                    loading.style.display = 'none';
+                    button.style.display = 'inline-flex';
+                    alert('⚠️ Das System läuft noch nicht!\n\nBitte starten Sie zuerst den Server mit:\nnpm start\n\nOder verwenden Sie das Desktop-Script "Freizeitbad LA OLA.command"');
+                });
+        });
+
+        // Tastatur-Shortcut
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                document.getElementById('startButton').click();
+            }
+        });
+    </script>
+</body>
+</html>
