@@ -449,7 +449,6 @@ const CsvImport = ({ onEquipmentImport }: {
 }) => {
   const [isUploading, setIsUploading] = useState(false);
   const [previewData, setPreviewData] = useState<Equipment[]>([]);
-  const [csvContent, setCsvContent] = useState<string>('');
 
   const parseCSV = (csvText: string): Equipment[] => {
     const lines = csvText.split('\n').filter(line => line.trim());
@@ -489,7 +488,6 @@ const CsvImport = ({ onEquipmentImport }: {
         setIsUploading(true);
         try {
           const text = await file.text();
-          setCsvContent(text);
           const parsedEquipment = parseCSV(text);
           setPreviewData(parsedEquipment);
         } catch (error) {
@@ -507,7 +505,6 @@ const CsvImport = ({ onEquipmentImport }: {
     if (previewData.length > 0) {
       onEquipmentImport(previewData);
       setPreviewData([]);
-      setCsvContent('');
       alert(`${previewData.length} Geräte wurden erfolgreich importiert!`);
     }
   };
@@ -806,15 +803,16 @@ const Dashboard = ({ equipment, inspections, onDeleteEquipment, onAddEquipment }
         <div className="mt-8">
           <CsvImport onEquipmentImport={(newEquipment) => {
             // Neue Geräte zur bestehenden Liste hinzufügen
-            setEquipment(prev => {
-              const updatedEquipment = [...prev, ...newEquipment];
-              // In localStorage speichern
-              localStorage.setItem('equipment', JSON.stringify(updatedEquipment));
-              return updatedEquipment;
-            });
+            // Da dies eine lokale Demo-App ist, speichern wir in localStorage
+            const existingEquipment = JSON.parse(localStorage.getItem('equipment') || '[]');
+            const updatedEquipment = [...existingEquipment, ...newEquipment];
+            localStorage.setItem('equipment', JSON.stringify(updatedEquipment));
             
             // Bestätigung anzeigen
-            alert(`${newEquipment.length} Geräte wurden erfolgreich importiert!`);
+            alert(`${newEquipment.length} Geräte wurden erfolgreich importiert und gespeichert!`);
+            
+            // Seite neu laden um die neuen Geräte anzuzeigen
+            window.location.reload();
           }} />
         </div>
       </div>
