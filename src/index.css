@@ -16,14 +16,14 @@ body {
 
 /* Navigation */
 .nav-modern {
-  background: rgba(255, 255, 255, 0.2);
+  background: #111827;
   backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  border-bottom: 1px solid #374151;
   padding: 1rem 0;
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
 .nav-modern .container {
@@ -49,7 +49,7 @@ body {
 }
 
 .nav-modern .nav-link {
-  color: #6b7280;
+  color: #d1d5db;
   text-decoration: none;
   font-weight: 500;
   padding: 0.5rem 1rem;
@@ -61,8 +61,8 @@ body {
 }
 
 .nav-modern .nav-link:hover {
-  color: #1f2937;
-  background: rgba(99, 102, 241, 0.1);
+  color: #ffffff;
+  background: rgba(99, 102, 241, 0.2);
   transform: translateY(-2px);
 }
 

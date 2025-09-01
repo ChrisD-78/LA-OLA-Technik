@@ -1217,7 +1217,7 @@ function App() {
   return (
     <Router>
       <div className="min-h-screen bg-gradient-to-br from-purple-600 via-blue-600 to-cyan-600">
-        <nav className="nav-modern">
+        <nav className="nav-modern bg-gray-900 shadow-lg border-b border-gray-700">
           <div className="container mx-auto px-2">
             <div className="flex items-center justify-between">
               <Link to="/" className="flex items-center space-x-3 pl-0">
