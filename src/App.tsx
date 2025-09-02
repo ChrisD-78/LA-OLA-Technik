@@ -939,7 +939,8 @@ const InspectionList = ({ inspections, equipment, onDelete }: {
         <div className="overflow-x-auto">
           <table className="table-modern w-full table-fixed">
             <colgroup>
-              <col className="w-[20%]" />
+              <col className="w-[12%]" />
+              <col className="w-[18%]" />
               <col className="w-[8%]" />
               <col className="w-[9%]" />
               <col className="w-[9%]" />
@@ -950,7 +951,8 @@ const InspectionList = ({ inspections, equipment, onDelete }: {
             </colgroup>
             <thead>
               <tr>
-                <th className="text-left py-4 px-2">Anlage</th>
+                <th className="text-left py-4 px-2">InventarNr</th>
+                <th className="text-left py-4 px-2">Gerät</th>
                 <th className="text-left py-4 px-2">Typ</th>
                 <th className="text-left py-4 px-2">Geplant für</th>
                 <th className="text-left py-4 px-2">Prüfer</th>
@@ -963,20 +965,27 @@ const InspectionList = ({ inspections, equipment, onDelete }: {
             <tbody>
               {filteredInspections.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="text-center py-12 text-gray-500">
+                  <td colSpan={9} className="text-center py-12 text-gray-500">
                     <div className="empty-state-modern">
                       <CheckSquare className="empty-state-icon" />
                       <p>Keine Prüfungen gefunden</p>
                     </div>
                   </td>
                 </tr>
-              ) : (
+                            ) : (
                 filteredInspections.map(inspection => {
                   const equipmentItem = equipment.find(eq => eq.id === inspection.equipmentId);
                   const equipmentName = equipmentItem?.name || `Gelöschte Anlage (ID: ${inspection.equipmentId})`;
                   
                   return (
                     <tr key={inspection.id} className="hover:bg-gray-50 transition-colors">
+                      <td className="py-4 px-2">
+                        <div className="min-w-0">
+                          <div className="text-sm text-gray-600 font-mono">
+                            {equipmentItem?.serialNumber || '-'}
+                          </div>
+                        </div>
+                      </td>
                       <td className="py-4 px-2">
                         <div className="min-w-0">
                           <div className={`font-medium truncate text-sm ${equipmentItem ? 'text-gray-900' : 'text-red-600'}`}>
@@ -998,7 +1007,7 @@ const InspectionList = ({ inspections, equipment, onDelete }: {
                       <td className="py-4 px-2">
                         <div className="flex items-center min-w-0">
                           <User className="h-3 w-3 mr-1 text-gray-400 flex-shrink-0" />
-                          <span className="truncate text-sm">{inspection.inspector}</span>
+                          <span className="text-sm">{inspection.inspector}</span>
                         </div>
                       </td>
                       <td className="py-4 px-2">
@@ -1043,7 +1052,7 @@ const InspectionList = ({ inspections, equipment, onDelete }: {
                             title="Bearbeiten"
                           >
                             <Edit className="h-3 w-3" />
-                          </button>
+                            </button>
                           <button
                             onClick={() => handleDelete(inspection.id)}
                             className="btn-modern btn-danger p-1.5 flex-shrink-0 min-w-[32px] h-8"
