@@ -1446,24 +1446,6 @@ function App() {
                 </button>
               </div>
             </form>
-
-            {/* Wasser-Design-Elemente */}
-            <div className="mt-10 pt-8 border-t border-white/20">
-              <div className="flex items-center justify-center space-x-6 text-white/60 text-base">
-                <div className="flex items-center space-x-2">
-                  <div className="w-3 h-3 bg-blue-400 rounded-full"></div>
-                  <span>Wasseraufbereitung</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <div className="w-3 h-3 bg-cyan-400 rounded-full"></div>
-                  <span>Technik</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <div className="w-3 h-3 bg-blue-400 rounded-full"></div>
-                  <span>Dokumentation</span>
-                </div>
-              </div>
-            </div>
           </div>
 
           {/* Footer */}
