@@ -1426,11 +1426,16 @@ function App() {
                 </div>
               )}
 
-              <div className="flex justify-center pt-12">
+              <div className="flex justify-center pt-16">
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-[500px] bg-blue-950 hover:bg-blue-900 text-white font-bold py-8 px-12 rounded-2xl transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-transparent disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none text-2xl shadow-2xl border-2 border-blue-800"
+                  style={{
+                    backgroundColor: '#1e3a8a',
+                    borderColor: '#1e40af',
+                    borderWidth: '3px'
+                  }}
+                  className="w-[500px] text-white font-bold py-8 px-12 rounded-2xl transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-transparent disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none text-2xl shadow-2xl hover:bg-blue-800"
                 >
                   {isLoading ? (
                     <div className="flex items-center justify-center space-x-4">
