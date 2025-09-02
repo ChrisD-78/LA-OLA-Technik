@@ -939,13 +939,14 @@ const InspectionList = ({ inspections, equipment, onDelete }: {
         <div className="overflow-x-auto">
           <table className="table-modern w-full table-fixed">
             <colgroup>
-              <col className="w-[12%]" />
-              <col className="w-[18%]" />
+              <col className="w-[10%]" />
+              <col className="w-[16%]" />
               <col className="w-[8%]" />
-              <col className="w-[9%]" />
-              <col className="w-[9%]" />
+              <col className="w-[8%]" />
+              <col className="w-[8%]" />
               <col className="w-[6%]" />
               <col className="w-[6%]" />
+              <col className="w-[8%]" />
               <col className="w-[8%]" />
               <col className="w-[12%]" />
             </colgroup>
@@ -956,6 +957,7 @@ const InspectionList = ({ inspections, equipment, onDelete }: {
                 <th className="text-left py-4 px-2">Typ</th>
                 <th className="text-left py-4 px-2">Geplant für</th>
                 <th className="text-left py-4 px-2">Prüfer</th>
+                <th className="text-left py-4 px-2">Intervall</th>
                 <th className="text-left py-4 px-2">Status</th>
                 <th className="text-left py-4 px-2">Ergebnis</th>
                 <th className="text-left py-4 px-2">Dokumente</th>
@@ -965,7 +967,7 @@ const InspectionList = ({ inspections, equipment, onDelete }: {
             <tbody>
               {filteredInspections.length === 0 ? (
                 <tr>
-                  <td colSpan={9} className="text-center py-12 text-gray-500">
+                  <td colSpan={10} className="text-center py-12 text-gray-500">
                     <div className="empty-state-modern">
                       <CheckSquare className="empty-state-icon" />
                       <p>Keine Prüfungen gefunden</p>
@@ -1008,6 +1010,13 @@ const InspectionList = ({ inspections, equipment, onDelete }: {
                         <div className="flex items-center min-w-0">
                           <User className="h-3 w-3 mr-1 text-gray-400 flex-shrink-0" />
                           <span className="text-sm">{inspection.inspector}</span>
+                        </div>
+                      </td>
+                      <td className="py-4 px-2">
+                        <div className="min-w-0">
+                          <span className="text-sm text-gray-600">
+                            {inspection.inspectionInterval ? `${inspection.inspectionInterval} Tage` : '-'}
+                          </span>
                         </div>
                       </td>
                       <td className="py-4 px-2">
@@ -1095,6 +1104,7 @@ const InspectionForm = ({ equipment, inspections, onSave }: {
     inspector: '',
     status: 'pending',
     notes: '',
+    inspectionInterval: 365, // Standard: 1 Jahr
     documents: []
   });
 
@@ -1164,7 +1174,7 @@ const InspectionForm = ({ equipment, inspections, onSave }: {
     navigate('/inspections');
   };
 
-  const handleInputChange = (field: keyof Inspection, value: string) => {
+  const handleInputChange = (field: keyof Inspection, value: string | number) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: '' }));
@@ -1267,6 +1277,28 @@ const InspectionForm = ({ equipment, inspections, onSave }: {
               onChange={(e) => handleInputChange('scheduledDate', e.target.value)}
             />
             {errors.scheduledDate && <p className="text-red-500 text-sm mt-1">{errors.scheduledDate}</p>}
+          </div>
+
+          <div className="form-group-modern">
+            <label className="form-label-modern">Prüfungsintervall (Tage) *</label>
+            <input
+              type="number"
+              min="1"
+              className={`form-input-modern ${errors.inspectionInterval ? 'border-red-500' : ''}`}
+              value={formData.inspectionInterval || ''}
+              onChange={(e) => {
+                const value = parseInt(e.target.value) || 0;
+                setFormData(prev => ({ ...prev, inspectionInterval: value }));
+                if (errors.inspectionInterval) {
+                  setErrors(prev => ({ ...prev, inspectionInterval: '' }));
+                }
+              }}
+              placeholder="z.B. 365 für jährlich"
+            />
+            {errors.inspectionInterval && <p className="text-red-500 text-sm mt-1">{errors.inspectionInterval}</p>}
+            <p className="text-sm text-gray-500 mt-1">
+              Häufige Intervalle: 30 (monatlich), 90 (vierteljährlich), 180 (halbjährlich), 365 (jährlich)
+            </p>
           </div>
 
           <div className="form-group-modern">

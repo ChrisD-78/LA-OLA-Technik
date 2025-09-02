@@ -45,6 +45,7 @@ export interface Inspection {
   notes?: string;
   findings?: string;
   nextInspectionDate?: string;
+  inspectionInterval?: number; // in Tagen
   category?: 'wartung' | 'technische_pruefung' | 'elektrische_pruefung' | 'messgeraete_pruefung';
   documents?: InspectionDocument[];
 }
