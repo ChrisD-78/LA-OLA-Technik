@@ -1119,14 +1119,7 @@ const InspectionForm = ({ equipment, inspections, onSave }: {
     }
   }, [id, inspections, isEditing]);
 
-  // Hilfsfunktion um den Gerätenamen mit InventarNr anzuzeigen
-  const getEquipmentDisplayName = (equipmentId: string) => {
-    const eq = equipment.find(e => e.id === equipmentId);
-    if (eq) {
-      return `${eq.serialNumber} - ${eq.name} (${eq.type})`;
-    }
-    return equipmentId;
-  };
+
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
