@@ -1109,11 +1109,20 @@ const InspectionForm = ({ equipment, inspections, onSave }: {
     }
   }, [id, inspections, isEditing]);
 
+  // Hilfsfunktion um den Gerätenamen mit InventarNr anzuzeigen
+  const getEquipmentDisplayName = (equipmentId: string) => {
+    const eq = equipment.find(e => e.id === equipmentId);
+    if (eq) {
+      return `${eq.serialNumber} - ${eq.name} (${eq.type})`;
+    }
+    return equipmentId;
+  };
+
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
     if (!formData.equipmentId?.trim()) {
-      newErrors.equipmentId = 'Anlagenname ist erforderlich';
+      newErrors.equipmentId = 'Gerät ist erforderlich';
     }
     if (!formData.type) {
       newErrors.type = 'Prüfungstyp ist erforderlich';
@@ -1217,14 +1226,19 @@ const InspectionForm = ({ equipment, inspections, onSave }: {
       <form onSubmit={handleSubmit}>
         <div className="grid-modern grid-cols-1 md:grid-cols-2 gap-6">
           <div className="form-group-modern">
-            <label className="form-label-modern">Anlage *</label>
-            <input
-              type="text"
-              className={`form-input-modern ${errors.equipmentId ? 'border-red-500' : ''}`}
+            <label className="form-label-modern">Gerät *</label>
+            <select
+              className={`form-select-modern ${errors.equipmentId ? 'border-red-500' : ''}`}
               value={formData.equipmentId || ''}
               onChange={(e) => handleInputChange('equipmentId', e.target.value)}
-              placeholder="z.B. Wasseraufbereitungsanlage, Chlor-Dosieranlage..."
-            />
+            >
+              <option value="">Bitte wählen Sie ein Gerät aus...</option>
+              {equipment.map(eq => (
+                <option key={eq.id} value={eq.id}>
+                  {eq.serialNumber} - {eq.name} ({eq.type})
+                </option>
+              ))}
+            </select>
             {errors.equipmentId && <p className="text-red-500 text-sm mt-1">{errors.equipmentId}</p>}
           </div>
 
