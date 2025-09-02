@@ -1243,6 +1243,18 @@ const InspectionForm = ({ equipment, inspections, onSave }: {
               ))}
             </select>
             {errors.equipmentId && <p className="text-red-500 text-sm mt-1">{errors.equipmentId}</p>}
+            
+            {/* InventarNr des ausgewählten Geräts anzeigen */}
+            {formData.equipmentId && (
+              <div className="mt-2 p-2 bg-blue-50 rounded-lg border border-blue-200">
+                <div className="text-sm text-blue-800">
+                  <strong>InventarNr:</strong> {equipment.find(eq => eq.id === formData.equipmentId)?.serialNumber || '-'}
+                </div>
+                <div className="text-sm text-blue-600 mt-1">
+                  <strong>Standort:</strong> {equipment.find(eq => eq.id === formData.equipmentId)?.location || '-'}
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="form-group-modern">
