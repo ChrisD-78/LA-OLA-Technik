@@ -878,7 +878,7 @@ const InspectionList = ({ inspections, equipment, onDelete }: {
           <h2 className="text-2xl font-bold text-gray-900">Prüfungs-Übersicht</h2>
           <button 
             className="btn-modern btn-primary"
-            onClick={() => onNavigate('inspections-new')}
+            onClick={() => window.location.href = '/inspections/new'}
           >
             <Plus className="h-4 w-4" />
             Neue Prüfung planen
@@ -1051,7 +1051,7 @@ const InspectionList = ({ inspections, equipment, onDelete }: {
                       <td className="py-4 px-2">
                         <div className="flex space-x-1 min-w-0 justify-start">
                           <button
-                            onClick={() => onNavigate('inspections')}
+                            onClick={() => window.location.href = '/inspections'}
                             className="btn-modern btn-secondary p-1.5 flex-shrink-0 min-w-[32px] h-8"
                             title="Bearbeiten"
                           >
@@ -1457,49 +1457,13 @@ const EquipmentForm = ({ onSave, onCancel }: {
 };
 
 // InspectionForm Component
-const InspectionForm = ({ equipment, inspections, onSave, onCancel }: { 
-  equipment: Equipment[], 
-  inspections?: Inspection[], 
-  onSave: (inspection: Inspection) => void,
-  onCancel: () => void
-}) => {
-
-  const [formData, setFormData] = useState<Partial<Inspection>>({
-    equipmentId: '',
-    type: 'maintenance',
-    scheduledDate: '',
-    inspector: '',
-    status: 'pending',
-    notes: '',
-    inspectionInterval: 365, // Standard: 1 Jahr
-    documents: []
-  });
-
-  const [errors, setErrors] = useState<Record<string, string>>({});
 
 
 
 
 
-  const validateForm = () => {
-    const newErrors: Record<string, string> = {};
 
-    if (!formData.equipmentId?.trim()) {
-      newErrors.equipmentId = 'Gerät ist erforderlich';
-    }
-    if (!formData.type) {
-      newErrors.type = 'Prüfungstyp ist erforderlich';
-    }
-    if (!formData.scheduledDate) {
-      newErrors.scheduledDate = 'Geplantes Datum ist erforderlich';
-    }
-    if (!formData.inspector?.trim()) {
-      newErrors.inspector = 'Prüfer ist erforderlich';
-    }
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -1829,13 +1793,7 @@ function App() {
     setEquipment(prev => [...prev, ...newEquipment]);
   };
 
-  const addInspection = (newInspection: Inspection) => {
-    setInspections(prev => [...prev, newInspection]);
-  };
 
-  const updateInspection = (updatedInspection: Inspection) => {
-    setInspections(prev => prev.map(insp => insp.id === updatedInspection.id ? updatedInspection : insp));
-  };
 
   const deleteInspection = (id: string) => {
     setInspections(prev => prev.filter(insp => insp.id !== id));
