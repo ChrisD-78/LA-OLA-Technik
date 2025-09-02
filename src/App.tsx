@@ -1364,37 +1364,37 @@ function App() {
         </div>
 
         {/* Login-Container */}
-        <div className="relative z-10 w-full max-w-md">
+        <div className="relative z-10 w-full max-w-lg">
           {/* Logo und Titel */}
-          <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-md rounded-full mb-6 border border-white/30">
-              <Package className="h-10 w-10 text-white" />
+          <div className="text-center mb-10">
+            <div className="inline-flex items-center justify-center w-24 h-24 bg-white/20 backdrop-blur-md rounded-full mb-8 border border-white/30">
+              <Package className="h-12 w-12 text-white" />
             </div>
-            <h1 className="text-4xl font-bold text-white mb-2">LA OLA</h1>
-            <p className="text-xl text-white/80">Technische Dokumentation</p>
-            <div className="flex items-center justify-center space-x-2 mt-3">
-              <div className="w-2 h-2 bg-blue-300 rounded-full animate-bounce"></div>
-              <div className="w-2 h-2 bg-cyan-300 rounded-full animate-bounce delay-100"></div>
-              <div className="w-2 h-2 bg-blue-300 rounded-full animate-bounce delay-200"></div>
+            <h1 className="text-5xl font-bold text-white mb-3">LA OLA</h1>
+            <p className="text-2xl text-white/80">Technische Dokumentation</p>
+            <div className="flex items-center justify-center space-x-3 mt-4">
+              <div className="w-3 h-3 bg-blue-300 rounded-full animate-bounce"></div>
+              <div className="w-3 h-3 bg-cyan-300 rounded-full animate-bounce delay-100"></div>
+              <div className="w-3 h-3 bg-blue-300 rounded-full animate-bounce delay-200"></div>
             </div>
           </div>
 
           {/* Login-Formular */}
-          <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20 shadow-2xl">
-            <form onSubmit={handleLogin} className="space-y-6">
+          <div className="bg-white/10 backdrop-blur-md rounded-3xl p-10 border border-white/20 shadow-2xl">
+            <form onSubmit={handleLogin} className="space-y-8">
               <div>
-                <label className="block text-sm font-medium text-white/90 mb-2">
+                <label className="block text-lg font-medium text-white/90 mb-3 text-center">
                   Benutzername
                 </label>
                 <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <User className="h-5 w-5 text-white/60" />
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <User className="h-6 w-6 text-white/60" />
                   </div>
                   <input
                     type="text"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 bg-white/20 border border-white/30 rounded-lg text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-200"
+                    className="w-full pl-14 pr-6 py-4 bg-white/20 border border-white/30 rounded-xl text-white placeholder-white/60 focus:outline-none focus:ring-3 focus:ring-blue-400 focus:border-transparent transition-all duration-200 text-lg"
                     placeholder="Benutzername eingeben"
                     required
                   />
@@ -1402,18 +1402,18 @@ function App() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-white/90 mb-2">
+                <label className="block text-lg font-medium text-white/90 mb-3 text-center">
                   Passwort
                 </label>
                 <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <CheckSquare className="h-5 w-5 text-white/60" />
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <CheckSquare className="h-6 w-6 text-white/60" />
                   </div>
                   <input
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 bg-white/20 border border-white/30 rounded-lg text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-200"
+                    className="w-full pl-14 pr-6 py-4 bg-white/20 border border-white/30 rounded-xl text-white placeholder-white/60 focus:outline-none focus:ring-3 focus:ring-blue-400 focus:border-transparent transition-all duration-200 text-lg"
                     placeholder="Passwort eingeben"
                     required
                   />
@@ -1421,43 +1421,45 @@ function App() {
               </div>
 
               {error && (
-                <div className="bg-red-500/20 border border-red-400/30 rounded-lg p-3">
-                  <p className="text-red-200 text-sm text-center">{error}</p>
+                <div className="bg-red-500/20 border border-red-400/30 rounded-xl p-4">
+                  <p className="text-red-200 text-base text-center">{error}</p>
                 </div>
               )}
 
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-transparent disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-              >
-                {isLoading ? (
-                  <div className="flex items-center justify-center space-x-2">
-                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                    <span>Anmeldung läuft...</span>
-                  </div>
-                ) : (
-                  <div className="flex items-center justify-center space-x-2">
-                    <CheckSquare className="h-5 w-5" />
-                    <span>Anmelden</span>
-                  </div>
-                )}
-              </button>
+              <div className="flex justify-center">
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className="w-80 bg-blue-900 hover:bg-blue-800 text-white font-bold py-5 px-8 rounded-xl transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-3 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-transparent disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none text-lg shadow-lg"
+                >
+                  {isLoading ? (
+                    <div className="flex items-center justify-center space-x-3">
+                      <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                      <span>Anmeldung läuft...</span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-center space-x-3">
+                      <CheckSquare className="h-6 w-6" />
+                      <span>Anmelden</span>
+                    </div>
+                  )}
+                </button>
+              </div>
             </form>
 
             {/* Wasser-Design-Elemente */}
-            <div className="mt-8 pt-6 border-t border-white/20">
-              <div className="flex items-center justify-center space-x-4 text-white/60 text-sm">
+            <div className="mt-10 pt-8 border-t border-white/20">
+              <div className="flex items-center justify-center space-x-6 text-white/60 text-base">
                 <div className="flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                  <div className="w-3 h-3 bg-blue-400 rounded-full"></div>
                   <span>Wasseraufbereitung</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-cyan-400 rounded-full"></div>
+                  <div className="w-3 h-3 bg-cyan-400 rounded-full"></div>
                   <span>Technik</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                  <div className="w-3 h-3 bg-blue-400 rounded-full"></div>
                   <span>Dokumentation</span>
                 </div>
               </div>
@@ -1465,8 +1467,8 @@ function App() {
           </div>
 
           {/* Footer */}
-          <div className="text-center mt-6">
-            <p className="text-white/60 text-sm">
+          <div className="text-center mt-8">
+            <p className="text-white/60 text-base">
               Freizeitbad LA OLA • Technische Verwaltung
             </p>
           </div>
