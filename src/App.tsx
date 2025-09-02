@@ -1304,6 +1304,7 @@ function App() {
   });
   const [inspections, setInspections] = useState<Inspection[]>(mockInspections);
   const [currentView, setCurrentView] = useState<'dashboard' | 'equipment' | 'equipment-new' | 'inspections' | 'inspections-new'>('dashboard');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const deleteEquipment = (id: string) => {
     setEquipment(prev => {
@@ -1325,11 +1326,167 @@ function App() {
     });
   };
 
-
-
   const deleteInspection = (id: string) => {
     setInspections(prev => prev.filter(insp => insp.id !== id));
   };
+
+  // Login-Komponente
+  const LoginPage = () => {
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+
+    const handleLogin = (e: React.FormEvent) => {
+      e.preventDefault();
+      setIsLoading(true);
+      setError('');
+
+      // Simuliere Login-Verzögerung
+      setTimeout(() => {
+        if (username === 'Technik' && password === 'technik1') {
+          setIsLoggedIn(true);
+          localStorage.setItem('isLoggedIn', 'true');
+        } else {
+          setError('Ungültige Anmeldedaten. Bitte versuchen Sie es erneut.');
+        }
+        setIsLoading(false);
+      }, 1000);
+    };
+
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-900 via-cyan-800 to-blue-600 flex items-center justify-center p-4">
+        {/* Wasser-Animation im Hintergrund */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute -top-40 -left-40 w-80 h-80 bg-blue-400/20 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute -bottom-40 -right-40 w-80 h-80 bg-cyan-400/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-blue-300/10 rounded-full blur-3xl animate-pulse delay-500"></div>
+        </div>
+
+        {/* Login-Container */}
+        <div className="relative z-10 w-full max-w-md">
+          {/* Logo und Titel */}
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-md rounded-full mb-6 border border-white/30">
+              <Package className="h-10 w-10 text-white" />
+            </div>
+            <h1 className="text-4xl font-bold text-white mb-2">LA OLA</h1>
+            <p className="text-xl text-white/80">Technische Dokumentation</p>
+            <div className="flex items-center justify-center space-x-2 mt-3">
+              <div className="w-2 h-2 bg-blue-300 rounded-full animate-bounce"></div>
+              <div className="w-2 h-2 bg-cyan-300 rounded-full animate-bounce delay-100"></div>
+              <div className="w-2 h-2 bg-blue-300 rounded-full animate-bounce delay-200"></div>
+            </div>
+          </div>
+
+          {/* Login-Formular */}
+          <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20 shadow-2xl">
+            <form onSubmit={handleLogin} className="space-y-6">
+              <div>
+                <label className="block text-sm font-medium text-white/90 mb-2">
+                  Benutzername
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <User className="h-5 w-5 text-white/60" />
+                  </div>
+                  <input
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    className="w-full pl-10 pr-4 py-3 bg-white/20 border border-white/30 rounded-lg text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-200"
+                    placeholder="Benutzername eingeben"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-white/90 mb-2">
+                  Passwort
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <CheckSquare className="h-5 w-5 text-white/60" />
+                  </div>
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full pl-10 pr-4 py-3 bg-white/20 border border-white/30 rounded-lg text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-200"
+                    placeholder="Passwort eingeben"
+                    required
+                  />
+                </div>
+              </div>
+
+              {error && (
+                <div className="bg-red-500/20 border border-red-400/30 rounded-lg p-3">
+                  <p className="text-red-200 text-sm text-center">{error}</p>
+                </div>
+              )}
+
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-transparent disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              >
+                {isLoading ? (
+                  <div className="flex items-center justify-center space-x-2">
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                    <span>Anmeldung läuft...</span>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-center space-x-2">
+                    <CheckSquare className="h-5 w-5" />
+                    <span>Anmelden</span>
+                  </div>
+                )}
+              </button>
+            </form>
+
+            {/* Wasser-Design-Elemente */}
+            <div className="mt-8 pt-6 border-t border-white/20">
+              <div className="flex items-center justify-center space-x-4 text-white/60 text-sm">
+                <div className="flex items-center space-x-2">
+                  <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                  <span>Wasseraufbereitung</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <div className="w-2 h-2 bg-cyan-400 rounded-full"></div>
+                  <span>Technik</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                  <span>Dokumentation</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Footer */}
+          <div className="text-center mt-6">
+            <p className="text-white/60 text-sm">
+              Freizeitbad LA OLA • Technische Verwaltung
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // Prüfe Login-Status beim Laden
+  React.useEffect(() => {
+    const loginStatus = localStorage.getItem('isLoggedIn');
+    if (loginStatus === 'true') {
+      setIsLoggedIn(true);
+    }
+  }, []);
+
+  // Zeige Login-Seite wenn nicht eingeloggt
+  if (!isLoggedIn) {
+    return <LoginPage />;
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-600 via-blue-600 to-cyan-600">
@@ -1374,6 +1531,19 @@ function App() {
                   >
                     <CheckSquare className="h-4 w-4" />
                     Prüfungen & Wartung
+                  </button>
+                </div>
+
+                <div className="header-button-container">
+                  <button 
+                    onClick={() => {
+                      setIsLoggedIn(false);
+                      localStorage.removeItem('isLoggedIn');
+                    }} 
+                    className="nav-link bg-red-700 hover:bg-red-600 text-white px-6 py-3 rounded-lg transition-all duration-200 hover:scale-105"
+                  >
+                    <User className="h-4 w-4" />
+                    Abmelden
                   </button>
                 </div>
               </div>
