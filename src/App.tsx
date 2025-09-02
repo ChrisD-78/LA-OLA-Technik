@@ -1380,21 +1380,21 @@ function App() {
           </div>
 
           {/* Login-Formular */}
-          <div className="bg-white/10 backdrop-blur-md rounded-3xl p-10 border border-white/20 shadow-2xl">
-            <form onSubmit={handleLogin} className="space-y-8">
+          <div className="bg-white/10 backdrop-blur-md rounded-3xl p-12 border border-white/20 shadow-2xl">
+            <form onSubmit={handleLogin} className="space-y-10">
               <div>
-                <label className="block text-lg font-medium text-white/90 mb-3 text-center">
+                <label className="block text-xl font-medium text-white/90 mb-4 text-center">
                   Benutzername
                 </label>
                 <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none">
-                    <User className="h-6 w-6 text-white/60" />
+                  <div className="absolute inset-y-0 left-0 pl-8 flex items-center pointer-events-none">
+                    <User className="h-7 w-7 text-white/60" />
                   </div>
                   <input
                     type="text"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    className="w-full pl-20 pr-6 py-6 bg-white/20 border border-white/30 rounded-xl text-white placeholder-white/60 focus:outline-none focus:ring-3 focus:ring-blue-400 focus:border-transparent transition-all duration-200 text-lg"
+                    className="w-full pl-24 pr-8 py-8 bg-white/20 border border-white/30 rounded-2xl text-white placeholder-white/60 focus:outline-none focus:ring-4 focus:ring-blue-400 focus:border-transparent transition-all duration-200 text-xl"
                     placeholder="Benutzername eingeben"
                     required
                   />
@@ -1402,18 +1402,18 @@ function App() {
               </div>
 
               <div>
-                <label className="block text-lg font-medium text-white/90 mb-3 text-center">
+                <label className="block text-xl font-medium text-white/90 mb-4 text-center">
                   Passwort
                 </label>
                 <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none">
-                    <CheckSquare className="h-6 w-6 text-white/60" />
+                  <div className="absolute inset-y-0 left-0 pl-8 flex items-center pointer-events-none">
+                    <CheckSquare className="h-7 w-7 text-white/60" />
                   </div>
                   <input
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full pl-20 pr-6 py-6 bg-white/20 border border-white/30 rounded-xl text-white placeholder-white/60 focus:outline-none focus:ring-3 focus:ring-blue-400 focus:border-transparent transition-all duration-200 text-lg"
+                    className="w-full pl-24 pr-8 py-8 bg-white/20 border border-white/30 rounded-2xl text-white placeholder-white/60 focus:outline-none focus:ring-4 focus:ring-blue-400 focus:border-transparent transition-all duration-200 text-xl"
                     placeholder="Passwort eingeben"
                     required
                   />
@@ -1421,25 +1421,25 @@ function App() {
               </div>
 
               {error && (
-                <div className="bg-red-500/20 border border-red-400/30 rounded-xl p-4">
-                  <p className="text-red-200 text-base text-center">{error}</p>
+                <div className="bg-red-500/20 border border-red-400/30 rounded-2xl p-5">
+                  <p className="text-red-200 text-lg text-center">{error}</p>
                 </div>
               )}
 
-              <div className="flex justify-center">
+              <div className="flex justify-center pt-4">
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-96 bg-blue-950 hover:bg-blue-900 text-white font-bold py-6 px-10 rounded-xl transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-3 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-transparent disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none text-xl shadow-lg"
+                  className="w-[500px] bg-blue-950 hover:bg-blue-900 text-white font-bold py-8 px-12 rounded-2xl transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-transparent disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none text-2xl shadow-2xl"
                 >
                   {isLoading ? (
-                    <div className="flex items-center justify-center space-x-3">
-                      <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                    <div className="flex items-center justify-center space-x-4">
+                      <div className="w-7 h-7 border-3 border-white/30 border-t-white rounded-full animate-spin"></div>
                       <span>Anmeldung läuft...</span>
                     </div>
                   ) : (
-                    <div className="flex items-center justify-center space-x-3">
-                      <CheckSquare className="h-7 w-7" />
+                    <div className="flex items-center justify-center space-x-4">
+                      <CheckSquare className="h-8 w-8" />
                       <span>Anmelden</span>
                     </div>
                   )}
