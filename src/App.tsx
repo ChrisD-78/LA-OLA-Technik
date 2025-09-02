@@ -1426,7 +1426,7 @@ function App() {
                 </div>
               )}
 
-              <div className="flex justify-center pt-16">
+              <div className="flex justify-center pt-24">
                 <button
                   type="submit"
                   disabled={isLoading}
