@@ -2,19 +2,18 @@ import React, { useState } from 'react';
 import {
   Package,
   Plus,
-  Edit,
-  Trash2,
   CheckSquare,
   Calendar,
-  User,
   AlertTriangle,
+  User,
+  FileText,
+  Edit,
+  Trash2,
   ArrowLeft,
   Save,
-  FileText,
-  Download,
-  X
+  Download
 } from 'lucide-react';
-import { Equipment, Inspection, InspectionDocument } from './types';
+import { Equipment, Inspection } from './types';
 import { v4 as uuidv4 } from 'uuid';
 
 // Mock Data direkt in der App
@@ -315,125 +314,6 @@ const mockInspections: Inspection[] = [
     ]
   }
 ];
-
-// PDF Upload Component
-const PdfUpload = ({ onPdfAdd }: { 
-  onPdfAdd: (file: File, description?: string) => void;
-}) => {
-  const [description, setDescription] = useState('');
-  const [isUploading, setIsUploading] = useState(false);
-
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      if (file.type === 'application/pdf') {
-        setIsUploading(true);
-        try {
-          onPdfAdd(file, description);
-          setDescription('');
-          // Reset file input
-          e.target.value = '';
-        } catch (error) {
-          alert('Fehler beim Hochladen der Datei.');
-        } finally {
-          setIsUploading(false);
-        }
-      } else {
-        alert('Bitte wählen Sie nur PDF-Dateien aus.');
-      }
-    }
-  };
-
-  return (
-    <div className="space-y-4">
-      <div className="form-group-modern">
-        <label className="form-label-modern">Beschreibung (optional)</label>
-        <input
-          type="text"
-          className="form-input-modern"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="z.B. Prüfprotokoll, Zertifikat, Messwerte..."
-        />
-      </div>
-      
-      <div className="form-group-modern">
-        <label className="form-label-modern">PDF-Dokument hochladen</label>
-        <input
-          type="file"
-          accept=".pdf,application/pdf"
-          onChange={handleFileChange}
-          className="form-input-modern"
-          disabled={isUploading}
-        />
-        <p className="text-sm text-gray-500 mt-1">
-          {isUploading ? 'Datei wird hochgeladen...' : 'Nur PDF-Dateien sind erlaubt'}
-        </p>
-      </div>
-    </div>
-  );
-};
-
-// PDF Gallery Component
-const PdfGallery = ({ documents, onDocumentDelete }: {
-  documents: InspectionDocument[];
-  onDocumentDelete: (documentId: string) => void;
-}) => {
-  if (!documents || documents.length === 0) {
-    return (
-      <div className="empty-state-modern">
-        <FileText className="empty-state-icon" />
-        <p>Keine Dokumente vorhanden</p>
-      </div>
-    );
-  }
-
-  const formatFileSize = (bytes: number) => {
-    if (bytes === 0) return '0 Bytes';
-    const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-  };
-
-  return (
-    <div className="space-y-2">
-      {documents.map((doc) => (
-        <div key={doc.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border">
-          <div className="flex items-center space-x-3">
-            <FileText className="h-5 w-5 text-red-600" />
-            <div>
-              <div className="font-medium text-gray-900">{doc.filename}</div>
-              {doc.description && (
-                <div className="text-sm text-gray-600">{doc.description}</div>
-              )}
-              <div className="text-xs text-gray-500">
-                {formatFileSize(doc.fileSize)} • {new Date(doc.uploadedAt).toLocaleDateString('de-DE')}
-              </div>
-            </div>
-          </div>
-          <div className="flex space-x-2">
-            <a
-              href={doc.url}
-              download={doc.filename}
-              className="btn-modern btn-secondary p-2"
-              title="Herunterladen"
-            >
-              <Download className="h-4 w-4" />
-            </a>
-            <button
-              onClick={() => onDocumentDelete(doc.id)}
-              className="btn-modern btn-danger p-2"
-              title="Löschen"
-            >
-              <X className="h-4 w-4" />
-            </button>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-};
 
 // CSV Import Component
 const CsvImport = ({ onEquipmentImport }: { 
