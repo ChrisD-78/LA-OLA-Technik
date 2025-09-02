@@ -596,11 +596,12 @@ Umwälzpumpe,Pumptechnik,Schwimmbecken 1,Technikschacht,Grundfos,UP 100,GF-2021-
 };
 
 // Dashboard Component
-const Dashboard = ({ equipment, inspections, onDeleteEquipment, onAddEquipment }: { 
+const Dashboard = ({ equipment, inspections, onDeleteEquipment, onAddEquipment, onNavigate }: { 
   equipment: Equipment[], 
   inspections: Inspection[],
   onDeleteEquipment: (id: string) => void,
-  onAddEquipment: (equipment: Equipment[]) => void
+  onAddEquipment: (equipment: Equipment[]) => void,
+  onNavigate: (view: 'dashboard' | 'equipment' | 'equipment-new' | 'inspections' | 'inspections-new') => void
 }) => {
   
   const stats = {
@@ -783,7 +784,7 @@ const Dashboard = ({ equipment, inspections, onDeleteEquipment, onAddEquipment }
         <h2 className="text-2xl font-bold text-gray-900 mb-6">Schnellaktionen</h2>
         <div className="grid-modern grid-cols-1 gap-4">
           <button
-            onClick={() => navigate('/inspections/new')}
+            onClick={() => onNavigate('inspections-new')}
             className="btn-modern btn-primary text-center"
           >
             <Calendar className="h-5 w-5" />
@@ -816,10 +817,9 @@ const Dashboard = ({ equipment, inspections, onDeleteEquipment, onAddEquipment }
 // InspectionList Component  
 const InspectionList = ({ inspections, equipment, onDelete }: { 
   inspections: Inspection[], 
-  equipment: Equipment[], 
+  equipment: Equipment[],
   onDelete: (id: string) => void 
 }) => {
-  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   
@@ -878,7 +878,7 @@ const InspectionList = ({ inspections, equipment, onDelete }: {
           <h2 className="text-2xl font-bold text-gray-900">Prüfungs-Übersicht</h2>
           <button 
             className="btn-modern btn-primary"
-            onClick={() => navigate('/inspections/new')}
+            onClick={() => onNavigate('inspections-new')}
           >
             <Plus className="h-4 w-4" />
             Neue Prüfung planen
@@ -1051,7 +1051,7 @@ const InspectionList = ({ inspections, equipment, onDelete }: {
                       <td className="py-4 px-2">
                         <div className="flex space-x-1 min-w-0 justify-start">
                           <button
-                            onClick={() => navigate(`/inspections/edit/${inspection.id}`)}
+                            onClick={() => onNavigate('inspections')}
                             className="btn-modern btn-secondary p-1.5 flex-shrink-0 min-w-[32px] h-8"
                             title="Bearbeiten"
                           >
@@ -1457,14 +1457,12 @@ const EquipmentForm = ({ onSave, onCancel }: {
 };
 
 // InspectionForm Component
-const InspectionForm = ({ equipment, inspections, onSave }: { 
+const InspectionForm = ({ equipment, inspections, onSave, onCancel }: { 
   equipment: Equipment[], 
   inspections?: Inspection[], 
-  onSave: (inspection: Inspection) => void 
+  onSave: (inspection: Inspection) => void,
+  onCancel: () => void
 }) => {
-  const navigate = useNavigate();
-  const { id } = useParams<{ id: string }>();
-  const isEditing = !!id;
 
   const [formData, setFormData] = useState<Partial<Inspection>>({
     equipmentId: '',
@@ -1479,14 +1477,7 @@ const InspectionForm = ({ equipment, inspections, onSave }: {
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  React.useEffect(() => {
-    if (isEditing && inspections) {
-      const inspectionToEdit = inspections.find(insp => insp.id === id);
-      if (inspectionToEdit) {
-        setFormData(inspectionToEdit);
-      }
-    }
-  }, [id, inspections, isEditing]);
+
 
 
 
@@ -1518,7 +1509,7 @@ const InspectionForm = ({ equipment, inspections, onSave }: {
     }
 
     const inspectionData: Inspection = {
-      id: isEditing && id ? id : uuidv4(),
+      id: uuidv4(),
       equipmentId: formData.equipmentId!,
       type: formData.type!,
       scheduledDate: formData.scheduledDate!,
@@ -1529,11 +1520,12 @@ const InspectionForm = ({ equipment, inspections, onSave }: {
       result: formData.result,
       findings: formData.findings,
       nextInspectionDate: formData.nextInspectionDate,
+      inspectionInterval: formData.inspectionInterval,
       documents: formData.documents || []
     };
 
     onSave(inspectionData);
-    navigate('/inspections');
+    onCancel();
   };
 
   const handleInputChange = (field: keyof Inspection, value: string | number) => {
@@ -1584,14 +1576,14 @@ const InspectionForm = ({ equipment, inspections, onSave }: {
     <div className="card-modern">
       <div className="flex items-center mb-8">
         <button
-          onClick={() => navigate('/inspections')}
+          onClick={onCancel}
           className="btn-modern btn-secondary mr-4"
         >
           <ArrowLeft className="h-4 w-4" />
           Zurück
         </button>
         <h1 className="text-3xl font-bold text-gray-900">
-          {isEditing ? 'Prüfung bearbeiten' : 'Neue Prüfung planen'}
+          Neue Prüfung planen
         </h1>
       </div>
 
@@ -1792,7 +1784,7 @@ const InspectionForm = ({ equipment, inspections, onSave }: {
         <div className="flex justify-end space-x-4 mt-8">
           <button
             type="button"
-            onClick={() => navigate('/inspections')}
+            onClick={onCancel}
             className="btn-modern btn-secondary"
           >
             Abbrechen
@@ -1802,7 +1794,7 @@ const InspectionForm = ({ equipment, inspections, onSave }: {
             className="btn-modern btn-primary"
           >
             <Save className="h-4 w-4" />
-            {isEditing ? 'Änderungen speichern' : 'Prüfung hinzufügen'}
+            Prüfung hinzufügen
           </button>
         </div>
       </form>
@@ -1820,7 +1812,7 @@ function App() {
     return mockEquipment;
   });
   const [inspections, setInspections] = useState<Inspection[]>(mockInspections);
-  const [currentView, setCurrentView] = useState<'dashboard' | 'equipment' | 'equipment-new' | 'inspections'>('dashboard');
+  const [currentView, setCurrentView] = useState<'dashboard' | 'equipment' | 'equipment-new' | 'inspections' | 'inspections-new'>('dashboard');
 
   const deleteEquipment = (id: string) => {
     setEquipment(prev => {
@@ -1854,10 +1846,13 @@ function App() {
         <nav className="nav-modern bg-gray-900 shadow-lg border-b border-gray-700">
           <div className="container mx-auto px-2">
             <div className="flex items-center justify-between">
-              <Link to="/" className="flex items-center space-x-3 pl-0">
-                <Package className="h-8 w-8 text-white" />
-                <span className="text-2xl font-bold text-white">Freizeitbad LA OLA</span>
-              </Link>
+              <button 
+                onClick={() => setCurrentView('dashboard')} 
+                className="flex items-center space-x-3 pl-0 text-white hover:text-gray-200 transition-colors"
+              >
+                <Package className="h-8 w-8" />
+                <span className="text-2xl font-bold">Freizeitbad LA OLA</span>
+              </button>
               
               <div className="flex items-center space-x-6">
                 <button 
@@ -1894,7 +1889,8 @@ function App() {
               equipment={equipment} 
               inspections={inspections} 
               onDeleteEquipment={deleteEquipment} 
-              onAddEquipment={addEquipment} 
+              onAddEquipment={addEquipment}
+              onNavigate={setCurrentView}
             />
           )}
 
@@ -1925,7 +1921,6 @@ function App() {
           )}
         </main>
       </div>
-    </div>
   );
 }
 
