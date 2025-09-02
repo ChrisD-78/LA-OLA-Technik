@@ -1229,13 +1229,13 @@ const InspectionForm = ({ equipment, inspections, onSave }: {
       <form onSubmit={handleSubmit}>
         <div className="grid-modern grid-cols-1 md:grid-cols-2 gap-6">
           <div className="form-group-modern">
-            <label className="form-label-modern">Gerät *</label>
+            <label className="form-label-modern">InventarNr *</label>
             <select
               className={`form-select-modern ${errors.equipmentId ? 'border-red-500' : ''}`}
               value={formData.equipmentId || ''}
               onChange={(e) => handleInputChange('equipmentId', e.target.value)}
             >
-              <option value="">Bitte wählen Sie ein Gerät aus...</option>
+              <option value="">Bitte wählen Sie eine InventarNr aus...</option>
               {equipment.map(eq => (
                 <option key={eq.id} value={eq.id}>
                   {eq.serialNumber} - {eq.name} ({eq.type})
@@ -1243,16 +1243,25 @@ const InspectionForm = ({ equipment, inspections, onSave }: {
               ))}
             </select>
             {errors.equipmentId && <p className="text-red-500 text-sm mt-1">{errors.equipmentId}</p>}
-            
-            {/* InventarNr des ausgewählten Geräts anzeigen */}
-            {formData.equipmentId && (
-              <div className="mt-2 p-2 bg-blue-50 rounded-lg border border-blue-200">
-                <div className="text-sm text-blue-800">
-                  <strong>InventarNr:</strong> {equipment.find(eq => eq.id === formData.equipmentId)?.serialNumber || '-'}
+          </div>
+
+          <div className="form-group-modern">
+            <label className="form-label-modern">Gerätedetails</label>
+            {formData.equipmentId ? (
+              <div className="p-3 bg-gray-50 rounded-lg border border-gray-200">
+                <div className="text-sm text-gray-800 mb-2">
+                  <strong>Gerät:</strong> {equipment.find(eq => eq.id === formData.equipmentId)?.name || '-'}
                 </div>
-                <div className="text-sm text-blue-600 mt-1">
+                <div className="text-sm text-gray-700 mb-2">
+                  <strong>Typ:</strong> {equipment.find(eq => eq.id === formData.equipmentId)?.type || '-'}
+                </div>
+                <div className="text-sm text-gray-700">
                   <strong>Standort:</strong> {equipment.find(eq => eq.id === formData.equipmentId)?.location || '-'}
                 </div>
+              </div>
+            ) : (
+              <div className="p-3 bg-gray-50 rounded-lg border border-gray-200 text-gray-500 text-sm">
+                Wählen Sie zuerst eine InventarNr aus
               </div>
             )}
           </div>
