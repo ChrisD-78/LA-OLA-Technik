@@ -1231,16 +1231,13 @@ const EquipmentForm = ({ onSave, onCancel }: {
   onSave: (equipment: Equipment) => void,
   onCancel: () => void
 }) => {
-  const [formData, setFormData] = useState<Partial<Equipment>>({
+  const [formData, setFormData] = useState<Partial<Equipment> & { imageFile?: string }>({
     name: '',
-    type: '',
     location: '',
-    manufacturer: '',
-    model: '',
     serialNumber: '',
-    purchaseDate: new Date().toISOString().split('T')[0],
     status: 'active' as const,
-    notes: ''
+    notes: '',
+    imageFile: ''
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -1248,23 +1245,14 @@ const EquipmentForm = ({ onSave, onCancel }: {
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
+    if (!formData.serialNumber?.trim()) {
+      newErrors.serialNumber = 'InventarNr ist erforderlich';
+    }
     if (!formData.name?.trim()) {
       newErrors.name = 'Gerätename ist erforderlich';
     }
-    if (!formData.type?.trim()) {
-      newErrors.type = 'Gerätetyp ist erforderlich';
-    }
     if (!formData.location?.trim()) {
       newErrors.location = 'Standort ist erforderlich';
-    }
-    if (!formData.manufacturer?.trim()) {
-      newErrors.manufacturer = 'Hersteller ist erforderlich';
-    }
-    if (!formData.model?.trim()) {
-      newErrors.model = 'Modell ist erforderlich';
-    }
-    if (!formData.serialNumber?.trim()) {
-      newErrors.serialNumber = 'InventarNr ist erforderlich';
     }
 
     setErrors(newErrors);
@@ -1281,15 +1269,22 @@ const EquipmentForm = ({ onSave, onCancel }: {
     const equipmentData: Equipment = {
       id: uuidv4(),
       name: formData.name!,
-      type: formData.type!,
+      type: 'Sonstiges', // Standardwert setzen
       location: formData.location!,
-      manufacturer: formData.manufacturer!,
-      model: formData.model!,
+      manufacturer: '', // Leerer Standardwert
+      model: '', // Leerer Standardwert
       serialNumber: formData.serialNumber!,
-      purchaseDate: formData.purchaseDate!,
+      purchaseDate: new Date().toISOString().split('T')[0], // Aktuelles Datum als Standard
       status: formData.status!,
       notes: formData.notes || '',
-      images: []
+      images: formData.imageFile ? [{
+        id: uuidv4(),
+        filename: formData.imageFile,
+        url: '', // URL wird später gesetzt wenn Bild tatsächlich hochgeladen wird
+        description: 'Gerätebild',
+        uploadedAt: new Date().toISOString(),
+        isMainImage: true
+      }] : []
     };
 
     onSave(equipmentData);
@@ -1320,6 +1315,18 @@ const EquipmentForm = ({ onSave, onCancel }: {
       <form onSubmit={handleSubmit}>
         <div className="grid-modern grid-cols-1 md:grid-cols-2 gap-6">
           <div className="form-group-modern">
+            <label className="form-label-modern">InventarNr *</label>
+            <input
+              type="text"
+              className={`form-input-modern ${errors.serialNumber ? 'border-red-500' : ''}`}
+              value={formData.serialNumber || ''}
+              onChange={(e) => handleInputChange('serialNumber', e.target.value)}
+              placeholder="z.B. AT-2023-001"
+            />
+            {errors.serialNumber && <p className="text-red-500 text-sm mt-1">{errors.serialNumber}</p>}
+          </div>
+
+          <div className="form-group-modern">
             <label className="form-label-modern">Gerätename *</label>
             <input
               type="text"
@@ -1329,28 +1336,6 @@ const EquipmentForm = ({ onSave, onCancel }: {
               placeholder="z.B. Wasseraufbereitungsanlage"
             />
             {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
-          </div>
-
-          <div className="form-group-modern">
-            <label className="form-label-modern">Gerätetyp *</label>
-            <select
-              className={`form-select-modern ${errors.type ? 'border-red-500' : ''}`}
-              value={formData.type || ''}
-              onChange={(e) => handleInputChange('type', e.target.value)}
-            >
-              <option value="">Bitte wählen Sie einen Typ aus...</option>
-              <option value="Wasseraufbereitung">Wasseraufbereitung</option>
-              <option value="Chemie-Dosierung">Chemie-Dosierung</option>
-              <option value="Pumptechnik">Pumptechnik</option>
-              <option value="Filtration">Filtration</option>
-              <option value="Lüftungstechnik">Lüftungstechnik</option>
-              <option value="Heiztechnik">Heiztechnik</option>
-              <option value="Elektrotechnik">Elektrotechnik</option>
-              <option value="Sanitär">Sanitär</option>
-              <option value="Sicherheit">Sicherheit</option>
-              <option value="Sonstiges">Sonstiges</option>
-            </select>
-            {errors.type && <p className="text-red-500 text-sm mt-1">{errors.type}</p>}
           </div>
 
           <div className="form-group-modern">
@@ -1366,49 +1351,21 @@ const EquipmentForm = ({ onSave, onCancel }: {
           </div>
 
           <div className="form-group-modern">
-            <label className="form-label-modern">Hersteller *</label>
+            <label className="form-label-modern">Bild</label>
             <input
-              type="text"
-              className={`form-input-modern ${errors.manufacturer ? 'border-red-500' : ''}`}
-              value={formData.manufacturer || ''}
-              onChange={(e) => handleInputChange('manufacturer', e.target.value)}
-              placeholder="z.B. AquaTech GmbH"
+              type="file"
+              accept="image/*"
+              className="form-input-modern file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) {
+                  // Hier können Sie die Bildverarbeitung implementieren
+                  // Für jetzt speichern wir nur den Dateinamen
+                  setFormData(prev => ({ ...prev, imageFile: file.name }));
+                }
+              }}
             />
-            {errors.manufacturer && <p className="text-red-500 text-sm mt-1">{errors.manufacturer}</p>}
-          </div>
-
-          <div className="form-group-modern">
-            <label className="form-label-modern">Modell *</label>
-            <input
-              type="text"
-              className={`form-input-modern ${errors.model ? 'border-red-500' : ''}`}
-              value={formData.model || ''}
-              onChange={(e) => handleInputChange('model', e.target.value)}
-              placeholder="z.B. WT-2000"
-            />
-            {errors.model && <p className="text-red-500 text-sm mt-1">{errors.model}</p>}
-          </div>
-
-          <div className="form-group-modern">
-            <label className="form-label-modern">InventarNr *</label>
-            <input
-              type="text"
-              className={`form-input-modern ${errors.serialNumber ? 'border-red-500' : ''}`}
-              value={formData.serialNumber || ''}
-              onChange={(e) => handleInputChange('serialNumber', e.target.value)}
-              placeholder="z.B. AT-2023-001"
-            />
-            {errors.serialNumber && <p className="text-red-500 text-sm mt-1">{errors.serialNumber}</p>}
-          </div>
-
-          <div className="form-group-modern">
-            <label className="form-label-modern">Kaufdatum</label>
-            <input
-              type="date"
-              className="form-input-modern"
-              value={formData.purchaseDate || ''}
-              onChange={(e) => handleInputChange('purchaseDate', e.target.value)}
-            />
+            <p className="text-sm text-gray-500 mt-1">Unterstützte Formate: JPG, PNG, GIF (max. 5MB)</p>
           </div>
 
           <div className="form-group-modern">
@@ -1480,7 +1437,12 @@ function App() {
   };
 
   const addEquipment = (newEquipment: Equipment[]) => {
-    setEquipment(prev => [...prev, ...newEquipment]);
+    setEquipment(prev => {
+      const updatedEquipment = [...prev, ...newEquipment];
+      // In localStorage speichern
+      localStorage.setItem('equipment', JSON.stringify(updatedEquipment));
+      return updatedEquipment;
+    });
   };
 
 
@@ -1491,41 +1453,49 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-600 via-blue-600 to-cyan-600">
-        <nav className="nav-modern bg-gray-900 shadow-lg border-b border-gray-700">
-          <div className="container mx-auto px-2">
-            <div className="flex items-center justify-between">
+        <nav className="nav-modern bg-blue-400/30 backdrop-blur-md shadow-lg border-b border-blue-300/50">
+          <div className="container mx-auto px-0">
+            <div className="flex items-center justify-start w-full">
               <button 
                 onClick={() => setCurrentView('dashboard')} 
-                className="flex items-center space-x-3 pl-0 text-white hover:text-gray-200 transition-colors"
+                className="flex items-center space-x-3 text-white hover:text-blue-100 transition-colors ml-0"
               >
                 <Package className="h-8 w-8" />
                 <span className="text-2xl font-bold">Freizeitbad LA OLA</span>
               </button>
               
-              <div className="flex items-center space-x-6">
-                <button 
-                  onClick={() => setCurrentView('dashboard')} 
-                  className="nav-link"
-                >
-                  <Package className="h-4 w-4" />
-                  Dashboard
-                </button>
+              <div className="logo-spacer"></div>
+              
+              <div className="flex items-center">
+                <div className="header-button-container">
+                  <button 
+                    onClick={() => setCurrentView('dashboard')} 
+                    className="nav-link bg-blue-800 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition-all duration-200 hover:scale-105"
+                  >
+                    <Package className="h-4 w-4" />
+                    Dashboard
+                  </button>
+                </div>
 
-                <button 
-                  onClick={() => setCurrentView('equipment')} 
-                  className="nav-link"
-                >
-                  <Package className="h-4 w-4" />
-                  Geräte
-                </button>
+                <div className="header-button-container">
+                  <button 
+                    onClick={() => setCurrentView('equipment')} 
+                    className="nav-link bg-blue-800 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition-all duration-200 hover:scale-105"
+                  >
+                    <Package className="h-4 w-4" />
+                    Geräte
+                  </button>
+                </div>
 
-                <button 
-                  onClick={() => setCurrentView('inspections')} 
-                  className="nav-link"
-                >
-                  <CheckSquare className="h-4 w-4" />
-                  Prüfungen & Wartung
-                </button>
+                <div className="header-button-container">
+                  <button 
+                    onClick={() => setCurrentView('inspections')} 
+                    className="nav-link bg-blue-800 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition-all duration-200 hover:scale-105"
+                  >
+                    <CheckSquare className="h-4 w-4" />
+                    Prüfungen & Wartung
+                  </button>
+                </div>
               </div>
             </div>
           </div>

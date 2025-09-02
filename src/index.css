@@ -16,14 +16,14 @@ body {
 
 /* Navigation */
 .nav-modern {
-  background: #111827;
+  background: rgba(96, 165, 250, 0.3);
   backdrop-filter: blur(20px);
-  border-bottom: 1px solid #374151;
+  border-bottom: 1px solid rgba(147, 197, 253, 0.5);
   padding: 1rem 0;
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 32px rgba(59, 130, 246, 0.2);
 }
 
 .nav-modern .container {
@@ -49,12 +49,12 @@ body {
 }
 
 .nav-modern .nav-link {
-  color: #d1d5db;
+  color: #ffffff;
   text-decoration: none;
   font-weight: 500;
-  padding: 0.5rem 1rem;
-  border-radius: 0.75rem;
   transition: all 0.3s ease;
+  border: none;
+  background: transparent;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -62,8 +62,39 @@ body {
 
 .nav-modern .nav-link:hover {
   color: #ffffff;
-  background: rgba(99, 102, 241, 0.2);
+  background: rgba(30, 64, 175, 0.8);
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
+}
+
+/* Header Button Spacing */
+.header-button-container {
+  margin-right: 120px;
+}
+
+.header-button-container:last-child {
+  margin-right: 0;
+}
+
+/* Force Logo Left Alignment */
+.nav-modern .container {
+  padding-left: 0;
+}
+
+.nav-modern .container > div {
+  justify-content: flex-start;
+}
+
+.nav-modern button:first-child {
+  margin-left: 0;
+  padding-left: 0;
+}
+
+/* Force Logo Spacing */
+.nav-modern .logo-spacer {
+  width: 300px !important;
+  min-width: 300px !important;
+  flex-shrink: 0 !important;
 }
 
 .nav-modern .nav-link.active {
