@@ -1,12 +1,4 @@
 import React, { useState } from 'react';
-import { 
-  BrowserRouter as Router, 
-  Routes, 
-  Route, 
-  Link, 
-  useNavigate, 
-  useParams 
-} from 'react-router-dom';
 import {
   Package,
   Plus,
@@ -610,7 +602,6 @@ const Dashboard = ({ equipment, inspections, onDeleteEquipment, onAddEquipment }
   onDeleteEquipment: (id: string) => void,
   onAddEquipment: (equipment: Equipment[]) => void
 }) => {
-  const navigate = useNavigate();
   
   const stats = {
     totalEquipment: equipment.length,
@@ -1829,6 +1820,7 @@ function App() {
     return mockEquipment;
   });
   const [inspections, setInspections] = useState<Inspection[]>(mockInspections);
+  const [currentView, setCurrentView] = useState<'dashboard' | 'equipment' | 'equipment-new' | 'inspections'>('dashboard');
 
   const deleteEquipment = (id: string) => {
     setEquipment(prev => {
@@ -1858,8 +1850,7 @@ function App() {
   };
 
   return (
-    <Router>
-      <div className="min-h-screen bg-gradient-to-br from-purple-600 via-blue-600 to-cyan-600">
+    <div className="min-h-screen bg-gradient-to-br from-purple-600 via-blue-600 to-cyan-600">
         <nav className="nav-modern bg-gray-900 shadow-lg border-b border-gray-700">
           <div className="container mx-auto px-2">
             <div className="flex items-center justify-between">
@@ -1869,71 +1860,72 @@ function App() {
               </Link>
               
               <div className="flex items-center space-x-6">
-                <Link to="/" className="nav-link">
+                <button 
+                  onClick={() => setCurrentView('dashboard')} 
+                  className="nav-link"
+                >
                   <Package className="h-4 w-4" />
                   Dashboard
-                </Link>
+                </button>
 
-                <Link to="/equipment" className="nav-link">
+                <button 
+                  onClick={() => setCurrentView('equipment')} 
+                  className="nav-link"
+                >
                   <Package className="h-4 w-4" />
                   Geräte
-                </Link>
+                </button>
 
-                <Link to="/inspections" className="nav-link">
+                <button 
+                  onClick={() => setCurrentView('inspections')} 
+                  className="nav-link"
+                >
                   <CheckSquare className="h-4 w-4" />
                   Prüfungen & Wartung
-                </Link>
+                </button>
               </div>
             </div>
           </div>
         </nav>
 
         <main className="container mx-auto px-6 py-8">
-          <Routes>
-            <Route path="/" element={<Dashboard equipment={equipment} inspections={inspections} onDeleteEquipment={deleteEquipment} onAddEquipment={addEquipment} />} />
+          {currentView === 'dashboard' && (
+            <Dashboard 
+              equipment={equipment} 
+              inspections={inspections} 
+              onDeleteEquipment={deleteEquipment} 
+              onAddEquipment={addEquipment} 
+            />
+          )}
 
-            <Route path="/equipment" element={
-              <EquipmentList 
-                equipment={equipment}
-                onDelete={deleteEquipment}
-                onAddNew={() => navigate('/equipment/new')}
-              />
-            } />
-            <Route path="/equipment/new" element={
-              <EquipmentForm 
-                onSave={(newEquipment) => {
-                  addEquipment([newEquipment]);
-                  navigate('/equipment');
-                }}
-                onCancel={() => navigate('/equipment')}
-              />
-            } />
+          {currentView === 'equipment' && (
+            <EquipmentList 
+              equipment={equipment}
+              onDelete={deleteEquipment}
+              onAddNew={() => setCurrentView('equipment-new')}
+            />
+          )}
 
-            <Route path="/inspections" element={
-              <InspectionList 
-                inspections={inspections}
-                equipment={equipment}
-                onDelete={deleteInspection}
-              />
-            } />
-            <Route path="/inspections/new" element={
-              <InspectionForm 
-                equipment={equipment}
-                inspections={inspections}
-                onSave={addInspection}
-              />
-            } />
-            <Route path="/inspections/edit/:id" element={
-              <InspectionForm 
-                equipment={equipment}
-                inspections={inspections}
-                onSave={updateInspection}
-              />
-            } />
-          </Routes>
+          {currentView === 'equipment-new' && (
+            <EquipmentForm 
+              onSave={(newEquipment) => {
+                addEquipment([newEquipment]);
+                setCurrentView('equipment');
+              }}
+              onCancel={() => setCurrentView('equipment')}
+            />
+          )}
+
+          {currentView === 'inspections' && (
+            <InspectionList 
+              inspections={inspections}
+              equipment={equipment}
+              onDelete={deleteInspection}
+            />
+          )}
         </main>
       </div>
-    </Router>
+    </div>
   );
 }
 
