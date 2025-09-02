@@ -1087,6 +1087,384 @@ const InspectionList = ({ inspections, equipment, onDelete }: {
   );
 };
 
+// EquipmentList Component
+const EquipmentList = ({ equipment, onDelete, onAddNew }: { 
+  equipment: Equipment[], 
+  onDelete: (id: string) => void,
+  onAddNew: () => void
+}) => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [typeFilter, setTypeFilter] = useState<string>('all');
+  const [statusFilter, setStatusFilter] = useState<string>('all');
+
+  const filteredEquipment = equipment.filter(eq => {
+    const matchesSearch = eq.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         eq.serialNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         eq.location.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesType = typeFilter === 'all' || eq.type === typeFilter;
+    const matchesStatus = statusFilter === 'all' || eq.status === statusFilter;
+    return matchesSearch && matchesType && matchesStatus;
+  });
+
+  return (
+    <div className="space-y-8">
+      <div className="text-center">
+        <h1 className="text-4xl font-bold text-white mb-4">Geräteverwaltung</h1>
+        <p className="text-xl text-white/90">Alle technischen Geräte und Anlagen im Überblick</p>
+      </div>
+
+      <div className="card-modern">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-bold text-gray-900">Geräte-Übersicht</h2>
+          <button 
+            className="btn-modern btn-primary"
+            onClick={onAddNew}
+          >
+            <Plus className="h-4 w-4" />
+            Neues Gerät anlegen
+          </button>
+        </div>
+
+        <div className="grid-modern grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <div className="form-group-modern">
+            <label className="form-label-modern">Suche</label>
+            <input
+              type="text"
+              className="form-input-modern"
+              placeholder="Name, InventarNr, Standort..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+          
+          <div className="form-group-modern">
+            <label className="form-label-modern">Typ</label>
+            <select
+              className="form-select-modern"
+              value={typeFilter}
+              onChange={(e) => setTypeFilter(e.target.value)}
+            >
+              <option value="all">Alle Typen</option>
+              <option value="Wasseraufbereitung">Wasseraufbereitung</option>
+              <option value="Chemie-Dosierung">Chemie-Dosierung</option>
+              <option value="Pumptechnik">Pumptechnik</option>
+              <option value="Filtration">Filtration</option>
+              <option value="Lüftungstechnik">Lüftungstechnik</option>
+              <option value="Heiztechnik">Heiztechnik</option>
+              <option value="Elektrotechnik">Elektrotechnik</option>
+              <option value="Sanitär">Sanitär</option>
+              <option value="Sicherheit">Sicherheit</option>
+              <option value="Sonstiges">Sonstiges</option>
+            </select>
+          </div>
+          
+          <div className="form-group-modern">
+            <label className="form-label-modern">Status</label>
+            <select
+              className="form-select-modern"
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+            >
+              <option value="all">Alle Status</option>
+              <option value="active">Aktiv</option>
+              <option value="inactive">Inaktiv</option>
+              <option value="maintenance">Wartung</option>
+            </select>
+          </div>
+        </div>
+
+        <div className="grid-modern grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredEquipment.length === 0 ? (
+            <div className="md:col-span-2 lg:col-span-3 text-center py-12 text-gray-500">
+              <div className="empty-state-modern">
+                <Package className="empty-state-icon" />
+                <p>Keine Geräte gefunden</p>
+              </div>
+            </div>
+          ) : (
+            filteredEquipment.map(eq => (
+              <div key={eq.id} className="equipment-card">
+                <div className="card-header">
+                  <div className="card-title">{eq.name}</div>
+                  <span className={`px-2 py-1 text-xs rounded-full ${
+                    eq.status === 'active' ? 'bg-green-100 text-green-800' :
+                    eq.status === 'maintenance' ? 'bg-yellow-100 text-yellow-800' :
+                    'bg-gray-100 text-gray-800'
+                  }`}>
+                    {eq.status === 'active' ? 'Aktiv' :
+                     eq.status === 'maintenance' ? 'Wartung' :
+                     'Inaktiv'}
+                  </span>
+                </div>
+                
+                <div className="card-content">
+                  <div className="space-y-2 text-sm">
+                    <div><strong>InventarNr:</strong> {eq.serialNumber}</div>
+                    <div><strong>Typ:</strong> {eq.type}</div>
+                    <div><strong>Standort:</strong> {eq.location}</div>
+                    <div><strong>Hersteller:</strong> {eq.manufacturer}</div>
+                    <div><strong>Modell:</strong> {eq.model}</div>
+                    {eq.purchaseDate && (
+                      <div><strong>Kaufdatum:</strong> {new Date(eq.purchaseDate).toLocaleDateString('de-DE')}</div>
+                    )}
+                    {eq.notes && (
+                      <div><strong>Notizen:</strong> {eq.notes}</div>
+                    )}
+                  </div>
+                </div>
+                
+                <div className="card-actions">
+                  <button
+                    onClick={() => {
+                      if (window.confirm(`Sind Sie sicher, dass Sie "${eq.name}" löschen möchten? Alle zugehörigen Prüfungen werden ebenfalls gelöscht.`)) {
+                        onDelete(eq.id);
+                      }
+                    }}
+                    className="btn-modern btn-danger w-full"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                    Gerät löschen
+                  </button>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// EquipmentForm Component
+const EquipmentForm = ({ onSave, onCancel }: { 
+  onSave: (equipment: Equipment) => void,
+  onCancel: () => void
+}) => {
+  const [formData, setFormData] = useState<Partial<Equipment>>({
+    name: '',
+    type: '',
+    location: '',
+    manufacturer: '',
+    model: '',
+    serialNumber: '',
+    purchaseDate: new Date().toISOString().split('T')[0],
+    status: 'active' as const,
+    notes: ''
+  });
+
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+
+    if (!formData.name?.trim()) {
+      newErrors.name = 'Gerätename ist erforderlich';
+    }
+    if (!formData.type?.trim()) {
+      newErrors.type = 'Gerätetyp ist erforderlich';
+    }
+    if (!formData.location?.trim()) {
+      newErrors.location = 'Standort ist erforderlich';
+    }
+    if (!formData.manufacturer?.trim()) {
+      newErrors.manufacturer = 'Hersteller ist erforderlich';
+    }
+    if (!formData.model?.trim()) {
+      newErrors.model = 'Modell ist erforderlich';
+    }
+    if (!formData.serialNumber?.trim()) {
+      newErrors.serialNumber = 'InventarNr ist erforderlich';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!validateForm()) {
+      return;
+    }
+
+    const equipmentData: Equipment = {
+      id: uuidv4(),
+      name: formData.name!,
+      type: formData.type!,
+      location: formData.location!,
+      manufacturer: formData.manufacturer!,
+      model: formData.model!,
+      serialNumber: formData.serialNumber!,
+      purchaseDate: formData.purchaseDate!,
+      status: formData.status!,
+      notes: formData.notes || '',
+      images: []
+    };
+
+    onSave(equipmentData);
+  };
+
+  const handleInputChange = (field: keyof Equipment, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+    if (errors[field]) {
+      setErrors(prev => ({ ...prev, [field]: '' }));
+    }
+  };
+
+  return (
+    <div className="card-modern">
+      <div className="flex items-center mb-8">
+        <button
+          onClick={onCancel}
+          className="btn-modern btn-secondary mr-4"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Zurück
+        </button>
+        <h1 className="text-3xl font-bold text-gray-900">
+          Neues Gerät anlegen
+        </h1>
+      </div>
+
+      <form onSubmit={handleSubmit}>
+        <div className="grid-modern grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="form-group-modern">
+            <label className="form-label-modern">Gerätename *</label>
+            <input
+              type="text"
+              className={`form-input-modern ${errors.name ? 'border-red-500' : ''}`}
+              value={formData.name || ''}
+              onChange={(e) => handleInputChange('name', e.target.value)}
+              placeholder="z.B. Wasseraufbereitungsanlage"
+            />
+            {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
+          </div>
+
+          <div className="form-group-modern">
+            <label className="form-label-modern">Gerätetyp *</label>
+            <select
+              className={`form-select-modern ${errors.type ? 'border-red-500' : ''}`}
+              value={formData.type || ''}
+              onChange={(e) => handleInputChange('type', e.target.value)}
+            >
+              <option value="">Bitte wählen Sie einen Typ aus...</option>
+              <option value="Wasseraufbereitung">Wasseraufbereitung</option>
+              <option value="Chemie-Dosierung">Chemie-Dosierung</option>
+              <option value="Pumptechnik">Pumptechnik</option>
+              <option value="Filtration">Filtration</option>
+              <option value="Lüftungstechnik">Lüftungstechnik</option>
+              <option value="Heiztechnik">Heiztechnik</option>
+              <option value="Elektrotechnik">Elektrotechnik</option>
+              <option value="Sanitär">Sanitär</option>
+              <option value="Sicherheit">Sicherheit</option>
+              <option value="Sonstiges">Sonstiges</option>
+            </select>
+            {errors.type && <p className="text-red-500 text-sm mt-1">{errors.type}</p>}
+          </div>
+
+          <div className="form-group-modern">
+            <label className="form-label-modern">Standort *</label>
+            <input
+              type="text"
+              className={`form-input-modern ${errors.location ? 'border-red-500' : ''}`}
+              value={formData.location || ''}
+              onChange={(e) => handleInputChange('location', e.target.value)}
+              placeholder="z.B. Technikraum Hauptgebäude"
+            />
+            {errors.location && <p className="text-red-500 text-sm mt-1">{errors.location}</p>}
+          </div>
+
+          <div className="form-group-modern">
+            <label className="form-label-modern">Hersteller *</label>
+            <input
+              type="text"
+              className={`form-input-modern ${errors.manufacturer ? 'border-red-500' : ''}`}
+              value={formData.manufacturer || ''}
+              onChange={(e) => handleInputChange('manufacturer', e.target.value)}
+              placeholder="z.B. AquaTech GmbH"
+            />
+            {errors.manufacturer && <p className="text-red-500 text-sm mt-1">{errors.manufacturer}</p>}
+          </div>
+
+          <div className="form-group-modern">
+            <label className="form-label-modern">Modell *</label>
+            <input
+              type="text"
+              className={`form-input-modern ${errors.model ? 'border-red-500' : ''}`}
+              value={formData.model || ''}
+              onChange={(e) => handleInputChange('model', e.target.value)}
+              placeholder="z.B. WT-2000"
+            />
+            {errors.model && <p className="text-red-500 text-sm mt-1">{errors.model}</p>}
+          </div>
+
+          <div className="form-group-modern">
+            <label className="form-label-modern">InventarNr *</label>
+            <input
+              type="text"
+              className={`form-input-modern ${errors.serialNumber ? 'border-red-500' : ''}`}
+              value={formData.serialNumber || ''}
+              onChange={(e) => handleInputChange('serialNumber', e.target.value)}
+              placeholder="z.B. AT-2023-001"
+            />
+            {errors.serialNumber && <p className="text-red-500 text-sm mt-1">{errors.serialNumber}</p>}
+          </div>
+
+          <div className="form-group-modern">
+            <label className="form-label-modern">Kaufdatum</label>
+            <input
+              type="date"
+              className="form-input-modern"
+              value={formData.purchaseDate || ''}
+              onChange={(e) => handleInputChange('purchaseDate', e.target.value)}
+            />
+          </div>
+
+          <div className="form-group-modern">
+            <label className="form-label-modern">Status</label>
+            <select
+              className="form-select-modern"
+              value={formData.status || 'active'}
+              onChange={(e) => handleInputChange('status', e.target.value)}
+            >
+              <option value="active">Aktiv</option>
+              <option value="inactive">Inaktiv</option>
+              <option value="maintenance">Wartung</option>
+            </select>
+          </div>
+
+          <div className="form-group-modern md:col-span-2">
+            <label className="form-label-modern">Notizen</label>
+            <textarea
+              className="form-input-modern h-24"
+              value={formData.notes || ''}
+              onChange={(e) => handleInputChange('notes', e.target.value)}
+              placeholder="Zusätzliche Notizen zum Gerät..."
+            />
+          </div>
+        </div>
+
+        <div className="flex justify-end space-x-4 mt-8">
+          <button
+            type="button"
+            onClick={onCancel}
+            className="btn-modern btn-secondary"
+          >
+            Abbrechen
+          </button>
+          <button
+            type="submit"
+            className="btn-modern btn-primary"
+          >
+            <Save className="h-4 w-4" />
+            Gerät anlegen
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+};
+
 // InspectionForm Component
 const InspectionForm = ({ equipment, inspections, onSave }: { 
   equipment: Equipment[], 
@@ -1496,6 +1874,11 @@ function App() {
                   Dashboard
                 </Link>
 
+                <Link to="/equipment" className="nav-link">
+                  <Package className="h-4 w-4" />
+                  Geräte
+                </Link>
+
                 <Link to="/inspections" className="nav-link">
                   <CheckSquare className="h-4 w-4" />
                   Prüfungen & Wartung
@@ -1508,6 +1891,23 @@ function App() {
         <main className="container mx-auto px-6 py-8">
           <Routes>
             <Route path="/" element={<Dashboard equipment={equipment} inspections={inspections} onDeleteEquipment={deleteEquipment} onAddEquipment={addEquipment} />} />
+
+            <Route path="/equipment" element={
+              <EquipmentList 
+                equipment={equipment}
+                onDelete={deleteEquipment}
+                onAddNew={() => navigate('/equipment/new')}
+              />
+            } />
+            <Route path="/equipment/new" element={
+              <EquipmentForm 
+                onSave={(newEquipment) => {
+                  addEquipment([newEquipment]);
+                  navigate('/equipment');
+                }}
+                onCancel={() => navigate('/equipment')}
+              />
+            } />
 
             <Route path="/inspections" element={
               <InspectionList 
