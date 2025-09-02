@@ -944,8 +944,8 @@ const InspectionList = ({ inspections, equipment, onDelete }: {
               <col className="w-[8%]" />
               <col className="w-[9%]" />
               <col className="w-[9%]" />
-              <col className="w-[8%]" />
-              <col className="w-[8%]" />
+              <col className="w-[6%]" />
+              <col className="w-[6%]" />
               <col className="w-[8%]" />
               <col className="w-[12%]" />
             </colgroup>
@@ -1012,21 +1012,25 @@ const InspectionList = ({ inspections, equipment, onDelete }: {
                       </td>
                       <td className="py-4 px-2">
                         <div className="min-w-0">
-                          {getStatusBadge(inspection)}
+                          <div className="transform scale-75 origin-left">
+                            {getStatusBadge(inspection)}
+                          </div>
                         </div>
                       </td>
                       <td className="py-4 px-2">
                         <div className="min-w-0">
                           {inspection.result ? (
-                            <span className={`badge-modern ${
-                              inspection.result === 'passed' ? 'badge-success' :
-                              inspection.result === 'failed' ? 'badge-danger' :
-                              'badge-warning'
-                            }`}>
-                              {inspection.result === 'passed' ? 'Bestanden' :
-                               inspection.result === 'failed' ? 'Nicht bestanden' :
-                               'Bedingt'}
-                            </span>
+                            <div className="transform scale-75 origin-left">
+                              <span className={`badge-modern ${
+                                inspection.result === 'passed' ? 'badge-success' :
+                                inspection.result === 'failed' ? 'badge-danger' :
+                                'badge-warning'
+                              }`}>
+                                {inspection.result === 'passed' ? 'Bestanden' :
+                                 inspection.result === 'failed' ? 'Nicht bestanden' :
+                                 'Bedingt'}
+                              </span>
+                            </div>
                           ) : (
                             <span className="text-gray-400">-</span>
                           )}
