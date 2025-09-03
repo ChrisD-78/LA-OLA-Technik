@@ -486,6 +486,7 @@ const InspectionList = ({ inspections, equipment, onDelete, onAddInspection, onE
       <div className="card-modern">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold text-gray-900">Prüfungs-Übersicht</h2>
+          {/* Deploy-Trigger: Kleine Änderung für Netlify-Update */}
         </div>
 
         <div className="grid-modern grid-cols-1 md:grid-cols-3 gap-4 mb-6">
@@ -529,7 +530,7 @@ const InspectionList = ({ inspections, equipment, onDelete, onAddInspection, onE
         </div>
       </div>
 
-      {/* Tabelle mit allen Prüfungen */}
+die sei      {/* Tabelle mit allen Prüfungen */}
       <div className="card-modern overflow-hidden max-w-[65%] mx-auto">
         <div className="overflow-x-auto">
           <table className="table-modern w-full table-fixed">
