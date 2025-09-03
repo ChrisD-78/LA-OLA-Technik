@@ -1312,6 +1312,15 @@ const InspectionForm = ({ equipment, inspection, onSave, onCancel }: {
         </h1>
       </div>
 
+      {/* Gerätename anzeigen, wenn eine bestehende Prüfung bearbeitet wird */}
+      {inspection && (
+        <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+          <h2 className="text-2xl font-bold text-blue-900">
+            {equipment.find(eq => eq.id === inspection.equipmentId)?.name || 'Unbekanntes Gerät'}
+          </h2>
+        </div>
+      )}
+
       <form onSubmit={handleSubmit}>
         <div className="grid-modern grid-cols-1 md:grid-cols-2 gap-6">
           {/* Geräteauswahl nur bei neuen Prüfungen anzeigen */}
