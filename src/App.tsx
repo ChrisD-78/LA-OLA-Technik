@@ -11,11 +11,170 @@ import {
   Trash2,
   ArrowLeft,
   Save,
-  Download
+  Download,
+  Lock,
+  Eye,
+  EyeOff
 } from 'lucide-react';
 import { Equipment, Inspection } from './types';
 import { mockEquipment, mockInspections } from './data/mockData';
 import { v4 as uuidv4 } from 'uuid';
+import { equipmentApi, inspectionsApi } from './lib/api';
+
+// Login Component
+const LoginPage = ({ onLogin }: { onLogin: () => void }) => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setIsLoading(true);
+
+    // Debug: Konsolenausgabe der eingegebenen Werte
+    console.log('Eingegebener Benutzername:', username);
+    console.log('Eingegebenes Passwort:', password);
+    console.log('Benutzername korrekt?', username === 'techik');
+    console.log('Passwort korrekt?', password === 'technik1');
+
+    // Simuliere eine kurze Ladezeit für bessere UX
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    if (username.trim() === 'techik' && password.trim() === 'technik1') {
+      onLogin();
+    } else {
+      setError('Ungültige Anmeldedaten. Bitte überprüfen Sie Benutzername und Passwort.');
+    }
+    
+    setIsLoading(false);
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-600 via-cyan-600 to-teal-600 flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Wasserelemente Animationen */}
+      <div className="absolute inset-0 overflow-hidden">
+        {/* Große Wasserblasen */}
+        <div className="water-bubble water-bubble-1"></div>
+        <div className="water-bubble water-bubble-2"></div>
+        <div className="water-bubble water-bubble-3"></div>
+        <div className="water-bubble water-bubble-4"></div>
+        <div className="water-bubble water-bubble-5"></div>
+        
+        {/* Kleine Wasserblasen */}
+        <div className="water-bubble-small water-bubble-small-1"></div>
+        <div className="water-bubble-small water-bubble-small-2"></div>
+        <div className="water-bubble-small water-bubble-small-3"></div>
+        <div className="water-bubble-small water-bubble-small-4"></div>
+        <div className="water-bubble-small water-bubble-small-5"></div>
+        <div className="water-bubble-small water-bubble-small-6"></div>
+        
+        {/* Wellen */}
+        <div className="wave wave-1"></div>
+        <div className="wave wave-2"></div>
+        <div className="wave wave-3"></div>
+      </div>
+
+      {/* Login Card */}
+      <div className="relative z-10 w-full max-w-md">
+        <div className="login-card">
+          {/* Logo und Titel */}
+          <div className="text-center mb-8">
+            <div className="login-logo">
+              <Package className="h-12 w-12 text-white" />
+            </div>
+            <h1 className="login-title">Freizeitbad LA OLA</h1>
+            <p className="login-subtitle">Technische Dokumentation</p>
+          </div>
+
+          {/* Login Form */}
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {error && (
+              <div className="login-error">
+                <AlertTriangle className="h-5 w-5" />
+                {error}
+              </div>
+            )}
+
+            <div className="form-group">
+              <label className="form-label">
+                <User className="h-5 w-5" />
+                Benutzername
+              </label>
+              <input
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="form-input"
+                placeholder="Benutzername eingeben"
+                required
+                disabled={isLoading}
+              />
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">
+                <Lock className="h-5 w-5" />
+                Passwort
+              </label>
+              <div className="password-input-container">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="form-input password-input"
+                  placeholder="Passwort eingeben"
+                  required
+                  disabled={isLoading}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="password-toggle"
+                  disabled={isLoading}
+                >
+                  {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                </button>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              className="login-button"
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <>
+                  <div className="login-spinner"></div>
+                  Anmeldung läuft...
+                </>
+              ) : (
+                <>
+                  <Lock className="h-5 w-5" />
+                  Anmelden
+                </>
+              )}
+            </button>
+          </form>
+
+          {/* Login Hinweise */}
+          <div className="login-hints">
+            <div className="hint-item">
+              <span className="hint-label">Benutzername:</span>
+              <span className="hint-value">techik</span>
+            </div>
+            <div className="hint-item">
+              <span className="hint-label">Passwort:</span>
+              <span className="hint-value">technik1</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 // CSV Import Component
 const CsvImport = ({ onEquipmentImport }: { 
@@ -1487,50 +1646,112 @@ const InspectionForm = ({ equipment, inspection, onSave, onCancel }: {
 };
 
 function App() {
-  // Beim Start Geräte aus localStorage laden, falls vorhanden
-  const [equipment, setEquipment] = useState<Equipment[]>(() => {
-    const savedEquipment = localStorage.getItem('equipment');
-    if (savedEquipment) {
-      return JSON.parse(savedEquipment);
-    }
-    return mockEquipment;
+  // Login State
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    return localStorage.getItem('isLoggedIn') === 'true';
   });
-  const [inspections, setInspections] = useState<Inspection[]>(mockInspections);
+
+  // State für Equipment und Inspections
+  const [equipment, setEquipment] = useState<Equipment[]>([]);
+  const [inspections, setInspections] = useState<Inspection[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Daten beim App-Start laden
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        
+        // Parallel Equipment und Inspections laden
+        const [equipmentData, inspectionsData] = await Promise.all([
+          equipmentApi.getAll(),
+          inspectionsApi.getAll()
+        ]);
+        
+        setEquipment(equipmentData);
+        setInspections(inspectionsData);
+      } catch (err) {
+        console.error('Fehler beim Laden der Daten:', err);
+        setError('Fehler beim Laden der Daten. Verwende lokale Beispieldaten.');
+        // Fallback auf Mock-Daten
+        setEquipment(mockEquipment);
+        setInspections(mockInspections);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadData();
+  }, []);
   const [currentView, setCurrentView] = useState<'dashboard' | 'equipment' | 'equipment-new' | 'inspections' | 'inspections-new' | 'inspection-edit'>('dashboard');
   const [editingInspection, setEditingInspection] = useState<Inspection | null>(null);
 
-  const deleteEquipment = (id: string) => {
-    setEquipment(prev => {
-      const updatedEquipment = prev.filter(eq => eq.id !== id);
-      // In localStorage speichern
-      localStorage.setItem('equipment', JSON.stringify(updatedEquipment));
-      return updatedEquipment;
-    });
-    // Auch zugehörige Prüfungen löschen
-    setInspections(prev => prev.filter(insp => insp.equipmentId !== id));
+  const handleLogin = () => {
+    setIsLoggedIn(true);
+    localStorage.setItem('isLoggedIn', 'true');
   };
 
-  const addEquipment = (newEquipment: Equipment[]) => {
-    setEquipment(prev => {
-      const updatedEquipment = [...prev, ...newEquipment];
-      // In localStorage speichern
-      localStorage.setItem('equipment', JSON.stringify(updatedEquipment));
-      return updatedEquipment;
-    });
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    localStorage.removeItem('isLoggedIn');
   };
 
-  const deleteInspection = (id: string) => {
-    setInspections(prev => prev.filter(insp => insp.id !== id));
+  const deleteEquipment = async (id: string) => {
+    try {
+      await equipmentApi.delete(id);
+      setEquipment(prev => prev.filter(eq => eq.id !== id));
+      // Auch zugehörige Prüfungen löschen (durch CASCADE in der DB)
+      setInspections(prev => prev.filter(insp => insp.equipmentId !== id));
+    } catch (err) {
+      console.error('Fehler beim Löschen des Geräts:', err);
+      alert('Fehler beim Löschen des Geräts. Bitte versuchen Sie es erneut.');
+    }
   };
 
-  const addInspection = (newInspection: Inspection) => {
-    setInspections(prev => [...prev, newInspection]);
+  const addEquipment = async (newEquipment: Equipment[]) => {
+    try {
+      const createdEquipment = await Promise.all(
+        newEquipment.map(eq => equipmentApi.create(eq))
+      );
+      setEquipment(prev => [...prev, ...createdEquipment]);
+    } catch (err) {
+      console.error('Fehler beim Erstellen der Geräte:', err);
+      alert('Fehler beim Erstellen der Geräte. Bitte versuchen Sie es erneut.');
+    }
   };
 
-  const updateInspection = (updatedInspection: Inspection) => {
-    setInspections(prev => prev.map(insp => 
-      insp.id === updatedInspection.id ? updatedInspection : insp
-    ));
+  const deleteInspection = async (id: string) => {
+    try {
+      await inspectionsApi.delete(id);
+      setInspections(prev => prev.filter(insp => insp.id !== id));
+    } catch (err) {
+      console.error('Fehler beim Löschen der Prüfung:', err);
+      alert('Fehler beim Löschen der Prüfung. Bitte versuchen Sie es erneut.');
+    }
+  };
+
+  const addInspection = async (newInspection: Inspection) => {
+    try {
+      const createdInspection = await inspectionsApi.create(newInspection);
+      setInspections(prev => [...prev, createdInspection]);
+    } catch (err) {
+      console.error('Fehler beim Erstellen der Prüfung:', err);
+      alert('Fehler beim Erstellen der Prüfung. Bitte versuchen Sie es erneut.');
+    }
+  };
+
+  const updateInspection = async (updatedInspection: Inspection) => {
+    try {
+      const updated = await inspectionsApi.update(updatedInspection.id, updatedInspection);
+      setInspections(prev => prev.map(insp => 
+        insp.id === updatedInspection.id ? updated : insp
+      ));
+    } catch (err) {
+      console.error('Fehler beim Aktualisieren der Prüfung:', err);
+      alert('Fehler beim Aktualisieren der Prüfung. Bitte versuchen Sie es erneut.');
+    }
   };
 
   const startEditInspection = (inspection: Inspection) => {
@@ -1553,8 +1774,38 @@ function App() {
     setCurrentView('inspections');
   };
 
+  // Zeige Login-Seite wenn nicht angemeldet
+  if (!isLoggedIn) {
+    return <LoginPage onLogin={handleLogin} />;
+  }
+
+  // Zeige Loading-Spinner während Daten geladen werden
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-purple-600 via-blue-600 to-cyan-600 flex items-center justify-center">
+        <div className="text-center">
+          <div className="spinner-modern mb-4"></div>
+          <p className="text-white text-lg">Daten werden geladen...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-600 via-blue-600 to-cyan-600">
+      {/* Fehler-Banner anzeigen */}
+      {error && (
+        <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4">
+          <div className="flex">
+            <div className="flex-shrink-0">
+              <AlertTriangle className="h-5 w-5" />
+            </div>
+            <div className="ml-3">
+              <p className="text-sm">{error}</p>
+            </div>
+          </div>
+        </div>
+      )}
         <nav className="nav-modern bg-blue-400/30 backdrop-blur-md shadow-lg border-b border-blue-300/50">
           <div className="container mx-auto px-0">
             <div className="flex items-center justify-start w-full">
@@ -1596,6 +1847,16 @@ function App() {
                   >
                     <CheckSquare className="h-4 w-4" />
                     Prüfungen & Wartung
+                  </button>
+                </div>
+
+                <div className="header-button-container">
+                  <button 
+                    onClick={handleLogout} 
+                    className="nav-link bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg transition-all duration-200 hover:scale-105"
+                  >
+                    <Lock className="h-4 w-4" />
+                    Abmelden
                   </button>
                 </div>
               </div>
