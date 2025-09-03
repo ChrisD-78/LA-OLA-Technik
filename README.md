@@ -34,11 +34,28 @@ Eine moderne Webanwendung zur Verwaltung und Dokumentation aller technischen Anl
 - ✅ **Professionelle Darstellung** aller Daten
 - ✅ **Hover-Animationen** und Smooth Transitions
 
-## 🚀 Installation
+## 🚀 Online-Version
+
+**Live-Anwendung**: [https://la-ola-technik.netlify.app](https://la-ola-technik.netlify.app)
+
+## 🔑 Anmeldedaten
+
+- **Benutzername**: `techik`
+- **Passwort**: `technik1`
+
+## 🗄️ Datenbank
+
+Die Anwendung verwendet **Supabase** als Backend-Datenbank:
+- **URL**: https://toeskuoixedornrqrvzm.supabase.co
+- **PostgreSQL** mit Row Level Security
+- **Automatische Backups** und Skalierung
+
+## 🚀 Lokale Entwicklung
 
 ### Voraussetzungen
-- Node.js (Version 16 oder höher)
+- Node.js (Version 18 oder höher)
 - npm oder yarn
+- Supabase-Projekt (siehe SUPABASE_SETUP.md)
 
 ### Setup
 ```bash
@@ -48,6 +65,10 @@ cd technik-doku
 
 # Abhängigkeiten installieren
 npm install
+
+# Umgebungsvariablen setzen (.env Datei erstellen)
+REACT_APP_SUPABASE_URL=https://toeskuoixedornrqrvzm.supabase.co
+REACT_APP_SUPABASE_ANON_KEY=ihr-supabase-anon-key
 
 # Entwicklungsserver starten
 npm start
@@ -112,8 +133,12 @@ Die Anwendung ist unter `http://localhost:3000` verfügbar.
 - **Styling**: Moderne CSS mit Glassmorphism-Effekten
 - **Icons**: Lucide React
 - **Routing**: React Router DOM
-- **Datenverwaltung**: Lokaler State mit React Hooks
+- **Datenverwaltung**: Supabase (PostgreSQL) mit React Hooks
 - **Bildverwaltung**: HTML5 File API mit Vorschau
+- **Authentication**: Custom Login-System
+- **Deployment**: Netlify mit automatischen Deployments
+- **Database**: Supabase mit Row Level Security
+- **API**: RESTful API mit Supabase Client
 
 ## 📋 Lizenz
 
