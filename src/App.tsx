@@ -10,13 +10,172 @@ import {
   Edit,
   Trash2,
   ArrowLeft,
-  Save
+  Save,
+  Download
 } from 'lucide-react';
 import { Equipment, Inspection } from './types';
 import { mockEquipment, mockInspections } from './data/mockData';
 import { v4 as uuidv4 } from 'uuid';
 
-// CSV Import Component - Entfernt, da nicht mehr verwendet
+// CSV Import Component
+const CsvImport = ({ onEquipmentImport }: { 
+  onEquipmentImport: (equipment: Equipment[]) => void;
+}) => {
+  const [isUploading, setIsUploading] = useState(false);
+  const [previewData, setPreviewData] = useState<Equipment[]>([]);
+
+  const parseCSV = (csvText: string): Equipment[] => {
+    const lines = csvText.split('\n').filter(line => line.trim());
+    if (lines.length < 2) return [];
+
+    const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+    const equipment: Equipment[] = [];
+
+    for (let i = 1; i < lines.length; i++) {
+      const values = lines[i].split(',').map(v => v.trim());
+      if (values.length < headers.length) continue;
+
+      const equipmentItem: Equipment = {
+        id: uuidv4(),
+        name: values[headers.indexOf('name')] || values[headers.indexOf('bezeichnung')] || values[headers.indexOf('gerät')] || `Gerät ${i}`,
+        type: values[headers.indexOf('type')] || values[headers.indexOf('typ')] || values[headers.indexOf('art')] || 'Unbekannt',
+        location: values[headers.indexOf('location')] || values[headers.indexOf('standort')] || values[headers.indexOf('ort')] || 'Unbekannt',
+        manufacturer: values[headers.indexOf('manufacturer')] || values[headers.indexOf('hersteller')] || values[headers.indexOf('firma')] || 'Unbekannt',
+        model: values[headers.indexOf('model')] || values[headers.indexOf('modell')] || values[headers.indexOf('bezeichnung')] || 'Unbekannt',
+        serialNumber: values[headers.indexOf('serialnumber')] || values[headers.indexOf('seriennummer')] || values[headers.indexOf('sn')] || `SN-${i}`,
+        purchaseDate: values[headers.indexOf('purchasedate')] || values[headers.indexOf('kaufdatum')] || values[headers.indexOf('datum')] || new Date().toISOString().split('T')[0],
+        status: 'active' as const,
+        notes: values[headers.indexOf('notes')] || values[headers.indexOf('notizen')] || values[headers.indexOf('bemerkungen')] || '',
+        images: []
+      };
+
+      equipment.push(equipmentItem);
+    }
+
+    return equipment;
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.type === 'text/csv' || file.name.endsWith('.csv')) {
+        setIsUploading(true);
+        try {
+          const text = await file.text();
+          const parsedEquipment = parseCSV(text);
+          setPreviewData(parsedEquipment);
+        } catch (error) {
+          alert('Fehler beim Lesen der CSV-Datei.');
+        } finally {
+          setIsUploading(false);
+        }
+      } else {
+        alert('Bitte wählen Sie nur CSV-Dateien aus.');
+      }
+    }
+  };
+
+  const handleImport = () => {
+    if (previewData.length > 0) {
+      onEquipmentImport(previewData);
+      setPreviewData([]);
+      alert(`${previewData.length} Geräte wurden erfolgreich importiert!`);
+    }
+  };
+
+  const downloadTemplate = () => {
+    const template = `Name,Type,Location,Manufacturer,Model,SerialNumber,PurchaseDate,Notes
+Wasseraufbereitungsanlage,Wasseraufbereitung,Technikraum Hauptgebäude,AquaTech GmbH,WT-2000,AT-2023-001,2023-01-15,Hauptanlage für Wasseraufbereitung
+Chlor-Dosieranlage,Chemie-Dosierung,Chemieraum Untergeschoss,ChemDos Systems,CD-500,CDS-2022-089,2022-08-20,Automatische Chlordosierung
+Umwälzpumpe,Pumptechnik,Schwimmbecken 1,Technikschacht,Grundfos,UP 100,GF-2021-456,2021-05-12,Hauptumwälzpumpe`;
+    
+    const blob = new Blob([template], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'geraete_template.csv';
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h3 className="text-lg font-semibold text-gray-900">CSV-Import für Geräte</h3>
+        <button
+          onClick={downloadTemplate}
+          className="btn-modern btn-secondary text-sm"
+        >
+          <Download className="h-4 w-4" />
+          CSV-Template herunterladen
+        </button>
+      </div>
+
+      <div className="form-group-modern">
+        <label className="form-label-modern">CSV-Datei auswählen</label>
+        <input
+          type="file"
+          accept=".csv,text/csv"
+          onChange={handleFileChange}
+          className="form-input-modern"
+          disabled={isUploading}
+        />
+        <p className="text-sm text-gray-500 mt-1">
+          {isUploading ? 'Datei wird verarbeitet...' : 'Unterstützte Spalten: Name, Type, Location, Manufacturer, Model, SerialNumber, PurchaseDate, Notes'}
+        </p>
+      </div>
+
+      {previewData.length > 0 && (
+        <div className="space-y-4">
+          <div className="flex justify-between items-center">
+            <h4 className="font-medium text-gray-900">
+              Vorschau: {previewData.length} Geräte gefunden
+            </h4>
+            <button
+              onClick={handleImport}
+              className="btn-modern btn-primary"
+            >
+              <Plus className="h-4 w-4" />
+              {previewData.length} Geräte importieren
+            </button>
+          </div>
+
+          <div className="max-h-60 overflow-y-auto">
+            <table className="table-modern">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Typ</th>
+                  <th>Standort</th>
+                  <th>Hersteller</th>
+                  <th>Modell</th>
+                </tr>
+              </thead>
+              <tbody>
+                {previewData.slice(0, 10).map((eq, index) => (
+                  <tr key={index}>
+                    <td className="text-sm">{eq.name}</td>
+                    <td className="text-sm">{eq.type}</td>
+                    <td className="text-sm">{eq.location}</td>
+                    <td className="text-sm">{eq.manufacturer}</td>
+                    <td className="text-sm">{eq.model}</td>
+                  </tr>
+                ))}
+                {previewData.length > 10 && (
+                  <tr>
+                    <td colSpan={5} className="text-center text-sm text-gray-500">
+                      ... und {previewData.length - 10} weitere Geräte
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
 
 // Dashboard Component
 const Dashboard = ({ equipment, inspections, onDeleteEquipment, onAddEquipment, onAddInspection, onNavigate }: { 
@@ -250,9 +409,7 @@ const Dashboard = ({ equipment, inspections, onDeleteEquipment, onAddEquipment, 
         </div>
 
         <div className="mt-8">
-          <div className="text-center text-gray-600">
-            <p>CSV-Import-Funktionalität ist derzeit nicht verfügbar.</p>
-          </div>
+          <CsvImport onEquipmentImport={onAddEquipment} />
         </div>
       </div>
     </div>
