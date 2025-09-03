@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Package,
   Plus,
@@ -14,306 +14,8 @@ import {
   Download
 } from 'lucide-react';
 import { Equipment, Inspection } from './types';
+import { mockEquipment, mockInspections } from './data/mockData';
 import { v4 as uuidv4 } from 'uuid';
-
-// Mock Data direkt in der App
-const mockEquipment: Equipment[] = [
-  {
-    id: '1',
-    name: 'Wasseraufbereitungsanlage',
-    type: 'Wasseraufbereitung',
-    location: 'Technikraum Hauptgebäude',
-    manufacturer: 'AquaTech GmbH',
-    model: 'WT-2000',
-    serialNumber: 'AT-2023-001',
-    purchaseDate: '2023-01-15',
-    lastInspection: '2024-02-15',
-    nextInspection: '2024-05-15',
-    status: 'active',
-    notes: 'Hauptanlage für Wasseraufbereitung aller Schwimmbecken',
-    images: [
-      {
-        id: 'img1',
-        filename: 'wasseraufbereitung-1.jpg',
-        url: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400&h=300&fit=crop',
-        description: 'Hauptansicht der Wasseraufbereitungsanlage',
-        uploadedAt: '2024-02-15',
-        isMainImage: true
-      },
-      {
-        id: 'img2',
-        filename: 'wasseraufbereitung-2.jpg',
-        url: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop',
-        description: 'Steuerungseinheit der Anlage',
-        uploadedAt: '2024-02-15',
-        isMainImage: false
-      }
-    ]
-  },
-  {
-    id: '2',
-    name: 'Chlor-Dosieranlage',
-    type: 'Chemie-Dosierung',
-    location: 'Chemieraum Untergeschoss',
-    manufacturer: 'ChemDos Systems',
-    model: 'CD-500',
-    serialNumber: 'CDS-2022-089',
-    purchaseDate: '2022-08-20',
-    lastInspection: '2024-01-10',
-    nextInspection: '2024-04-10',
-    status: 'active',
-    notes: 'Automatische Chlordosierung für alle Becken',
-    images: [
-      {
-        id: 'img3',
-        filename: 'chlordosierung-1.jpg',
-        url: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400&h=300&fit=crop',
-        description: 'Chlor-Dosieranlage im Chemieraum',
-        uploadedAt: '2024-01-10',
-        isMainImage: true
-      }
-    ]
-  },
-  {
-    id: '3',
-    name: 'Umwälzpumpe Becken 1',
-    type: 'Pumptechnik',
-    location: 'Schwimmbecken 1, Technikschacht',
-    manufacturer: 'Grundfos',
-    model: 'UP 100',
-    serialNumber: 'GF-2021-456',
-    purchaseDate: '2021-05-12',
-    lastInspection: '2024-03-01',
-    nextInspection: '2024-06-01',
-    status: 'active',
-    notes: 'Hauptumwälzpumpe für das große Schwimmbecken',
-    images: [
-      {
-        id: 'img4',
-        filename: 'pumpe-1.jpg',
-        url: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400&h=300&fit=crop',
-        description: 'Umwälzpumpe im Technikschacht',
-        uploadedAt: '2024-03-01',
-        isMainImage: true
-      }
-    ]
-  },
-  {
-    id: '4',
-    name: 'Filteranlage Sauna',
-    type: 'Filtration',
-    location: 'Saunabereich, Technikraum',
-    manufacturer: 'PoolTech',
-    model: 'PT-Filter-300',
-    serialNumber: 'PT-2020-123',
-    purchaseDate: '2020-11-30',
-    lastInspection: '2024-02-20',
-    nextInspection: '2024-05-20',
-    status: 'active',
-    notes: 'Filteranlage für den Saunabereich',
-    images: [
-      {
-        id: 'img5',
-        filename: 'filter-sauna-1.jpg',
-        url: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400&h=300&fit=crop',
-        description: 'Filteranlage im Saunabereich',
-        uploadedAt: '2024-02-20',
-        isMainImage: true
-      }
-    ]
-  },
-  {
-    id: '5',
-    name: 'Lüftungsanlage Hauptbereich',
-    type: 'Lüftungstechnik',
-    location: 'Dachgeschoss, Lüftungszentrale',
-    manufacturer: 'VentilAir Pro',
-    model: 'VA-5000',
-    serialNumber: 'VAP-2019-678',
-    purchaseDate: '2019-03-10',
-    lastInspection: '2024-01-25',
-    nextInspection: '2024-07-25',
-    status: 'maintenance',
-    notes: 'Wartung läuft - Sicherheitssensoren werden kalibriert',
-    images: [
-      {
-        id: 'img6',
-        filename: 'lueftung-1.jpg',
-        url: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400&h=300&fit=crop',
-        description: 'Lüftungsanlage auf dem Dach',
-        uploadedAt: '2024-01-25',
-        isMainImage: true
-      }
-    ]
-  },
-  {
-    id: '6',
-    name: 'Heizungsanlage Beckenwasser',
-    type: 'Heiztechnik',
-    location: 'Technikraum Untergeschoss',
-    manufacturer: 'Thermowärme GmbH',
-    model: 'TW-Heat-800',
-    serialNumber: 'TW-2020-445',
-    purchaseDate: '2020-10-15',
-    lastInspection: '2024-02-28',
-    nextInspection: '2024-05-28',
-    status: 'active',
-    notes: 'Heizung für Schwimmbecken und Warmwasser',
-    images: [
-      {
-        id: 'img7',
-        filename: 'heizung-1.jpg',
-        url: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400&h=300&fit=crop',
-        description: 'Heizungsanlage im Technikraum',
-        uploadedAt: '2024-02-28',
-        isMainImage: true
-      }
-    ]
-  },
-  {
-    id: '7',
-    name: 'Notstromaggregat',
-    type: 'Elektrotechnik',
-    location: 'Außenbereich, Technikcontainer',
-    manufacturer: 'PowerGen Systems',
-    model: 'PG-Emergency-50',
-    serialNumber: 'PGS-2021-789',
-    purchaseDate: '2021-09-20',
-    lastInspection: '2024-03-15',
-    nextInspection: '2024-06-15',
-    status: 'active',
-    notes: 'Notstromversorgung für kritische Systeme',
-    images: [
-      {
-        id: 'img8',
-        filename: 'notstrom-1.jpg',
-        url: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400&h=300&fit=crop',
-        description: 'Notstromaggregat im Container',
-        uploadedAt: '2024-03-15',
-        isMainImage: true
-      }
-    ]
-  }
-];
-
-const mockInspections: Inspection[] = [
-  {
-    id: '1',
-    equipmentId: '1',
-    type: 'maintenance',
-    scheduledDate: '2024-05-15',
-    inspector: 'Hans Mueller (AquaTech)',
-    status: 'pending',
-    notes: 'Quartalswartung - Filter tauschen und Werte prüfen'
-  },
-
-  {
-    id: '3',
-    equipmentId: '3',
-    type: 'maintenance',
-    scheduledDate: '2024-06-01',
-    inspector: 'Peter Wagner (Grundfos Service)',
-    status: 'pending',
-    notes: 'Jährliche Wartung der Umwälzpumpe'
-  },
-  {
-    id: '4',
-    equipmentId: '1',
-    type: 'calibration',
-    scheduledDate: '2024-02-15',
-    completedDate: '2024-02-15',
-    inspector: 'Hans Mueller (AquaTech)',
-    status: 'completed',
-    result: 'passed',
-    findings: 'Alle Sensoren funktionieren einwandfrei',
-    notes: 'Monatliche Kalibrierung der Sensoren',
-    documents: [
-      {
-        id: 'doc1',
-        filename: 'Kalibrierungsprotokoll_Wasseraufbereitung_2024-02-15.pdf',
-        url: 'data:application/pdf;base64,JVBERi0xLjQKJcOkw7zDtsKsw6HDqMOgw7wKMSAwIG9iago8PAovVHlwZSAvQ2F0YWxvZwovUGFnZXMgMiAwIFIKPj4KZW5kb2JqCjIgMCBvYmoKPDwKL1R5cGUgL1BhZ2VzCi9LaWRzIFsgMyAwIFIgXQovQ291bnQgMQo+PgplbmRvYmoKMyAwIG9iago8PAovVHlwZSAvUGFnZQovUGFyZW50IDIgMCBSCi9NZWRpYUJveCBbIDAgMCA2MTIgNzkyIF0KL0NvbnRlbnRzIDQgMCBSCj4+CmVuZG9iago0IDAgb2JqCjw8Ci9MZW5ndGggNDQKPj4Kc3RyZWFtCkJUCi9GMSAxMiBUZgo3MiA3MjAgVGQKKEthbGlicmllcnVuZ3Nwcm90b2tvbGwpIFRqCkVUCmVuZHN0cmVhbQplbmRvYmoKeHJlZgowIDUKMDAwMDAwMDAwMCA2NTUzNSBmIAowMDAwMDAwMDEwIDAwMDAwIG4gCjAwMDAwMDAwNTMgMDAwMDAgbiAKMDAwMDAwMDEyNSAwMDAwMCBuIAowMDAwMDAwMjMwIDAwMDAwIG4gCnRyYWlsZXIKPDwKL1NpemUgNQovUm9vdCAxIDAgUgo+PgpzdGFydHhyZWYKMzI3CiUlRU9G',
-        description: 'Offizielles Kalibrierungsprotokoll',
-        uploadedAt: '2024-02-15',
-        fileSize: 256000
-      },
-      {
-        id: 'doc2',
-        filename: 'Messwerte_Sensoren_Feb2024.pdf',
-        url: 'data:application/pdf;base64,JVBERi0xLjQKJcOkw7zDtsKsw6HDqMOgw7wKMSAwIG9iago8PAovVHlwZSAvQ2F0YWxvZwovUGFnZXMgMiAwIFIKPj4KZW5kb2JqCjIgMCBvYmoKPDwKL1R5cGUgL1BhZ2VzCi9LaWRzIFsgMyAwIFIgXQovQ291bnQgMQo+PgplbmRvYmoKMyAwIG9iago8PAovVHlwZSAvUGFnZQovUGFyZW50IDIgMCBSCi9NZWRpYUJveCBbIDAgMCA2MTIgNzkyIF0KL0NvbnRlbnRzIDQgMCBSCj4+CmVuZG9iago0IDAgb2JqCjw8Ci9MZW5ndGggMzgKPj4Kc3RyZWFtCkJUCi9GMSAxMiBUZgo3MiA3MjAgVGQKKE1lc3N3ZXJ0ZSBTZW5zb3JlbikgVGoKRVQKZW5kc3RyZWFtCmVuZG9iagp4cmVmCjAgNQowMDAwMDAwMDAwIDY1NTM1IGYgCjAwMDAwMDAwMTAgMDAwMDAgbiAKMDAwMDAwMDA1MyAwMDAwMCBuIAowMDAwMDAwMTI1IDAwMDAwIG4gCjAwMDAwMDAyMzAgMDAwMDAgbiAKdHJhaWxlcgo8PAovU2l6ZSA1Ci9Sb290IDEgMCBSCj4+CnN0YXJ0eHJlZgozMzAKJSVFT0Y=',
-        description: 'Detaillierte Messwerte der Sensoren',
-        uploadedAt: '2024-02-15',
-        fileSize: 128000
-      }
-    ]
-  },
-  {
-    id: '5',
-    equipmentId: '4',
-    type: 'maintenance',
-    scheduledDate: '2024-05-20',
-    inspector: 'Lisa Bauer (PoolTech)',
-    status: 'pending',
-    notes: 'Filterwechsel und Systemcheck'
-  },
-  {
-    id: '7',
-    equipmentId: '2',
-    type: 'technical_inspection',
-    scheduledDate: '2024-06-15',
-    inspector: 'Dr. Martin Schneider (TÜV)',
-    status: 'pending',
-    notes: 'Jährliche technische Prüfung der Chlor-Dosieranlage'
-  },
-  {
-    id: '8',
-    equipmentId: '3',
-    type: 'electrical_inspection',
-    scheduledDate: '2024-07-01',
-    inspector: 'Elektro Weber GmbH',
-    status: 'pending',
-    notes: 'Elektrische Sicherheitsprüfung der Umwälzpumpe'
-  },
-  {
-    id: '9',
-    equipmentId: '6',
-    type: 'maintenance',
-    scheduledDate: '2024-08-01',
-    inspector: 'Thermowärme Service',
-    status: 'pending',
-    notes: 'Wartung der Heizungsanlage'
-  },
-  {
-    id: '10',
-    equipmentId: '7',
-    type: 'technical_inspection',
-    scheduledDate: '2024-09-01',
-    inspector: 'TÜV Süd',
-    status: 'pending',
-    notes: 'Technische Prüfung des Notstromaggregats'
-  },
-  {
-    id: '6',
-    equipmentId: '5',
-    type: 'maintenance',
-    scheduledDate: '2024-07-25',
-    completedDate: '2024-03-10',
-    inspector: 'Thomas Richter (VentilAir)',
-    status: 'completed',
-    result: 'passed',
-    notes: 'Routinewartung - alle Werte im Normbereich',
-    nextInspectionDate: '2024-07-15',
-    documents: [
-      {
-        id: 'doc3',
-        filename: 'Wartungsprotokoll_Lüftung_2024-03-10.pdf',
-        url: 'data:application/pdf;base64,JVBERi0xLjQKJcOkw7zDtsKsw6HDqMOgw7wKMSAwIG9iago8PAovVHlwZSAvQ2F0YWxvZwovUGFnZXMgMiAwIFIKPj4KZW5kb2JqCjIgMCBvYmoKPDwKL1R5cGUgL1BhZ2VzCi9LaWRzIFsgMyAwIFIgXQovQ291bnQgMQo+PgplbmRvYmoKMyAwIG9iago8PAovVHlwZSAvUGFnZQovUGFyZW50IDIgMCBSCi9NZWRpYUJveCBbIDAgMCA2MTIgNzkyIF0KL0NvbnRlbnRzIDQgMCBSCj4+CmVuZG9iago0IDAgb2JqCjw8Ci9MZW5ndGggNDcKPj4Kc3RyZWFtCkJUCi9GMSAxMiBUZgo3MiA3MjAgVGQKKFdhcnR1bmdzcHJvdG9rb2xsIEzDvGZ0dW5nKSBUagpFVAplbmRzdHJlYW0KZW5kb2JqCnhyZWYKMCA1CjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDAxMCAwMDAwMCBuIAowMDAwMDAwMDUzIDAwMDAwIG4gCjAwMDAwMDAxMjUgMDAwMDAgbiAKMDAwMDAwMDIzMCAwMDAwMCBuIAp0cmFpbGVyCjw8Ci9TaXplIDUKL1Jvb3QgMSAwIFIKPj4Kc3RhcnR4cmVmCjMzMAolJUVPRg==',
-        description: 'Wartungsprotokoll Lüftungsanlage',
-        uploadedAt: '2024-03-10',
-        fileSize: 180000
-      }
-    ]
-  }
-];
 
 // CSV Import Component
 const CsvImport = ({ onEquipmentImport }: { 
@@ -476,12 +178,13 @@ Umwälzpumpe,Pumptechnik,Schwimmbecken 1,Technikschacht,Grundfos,UP 100,GF-2021-
 };
 
 // Dashboard Component
-const Dashboard = ({ equipment, inspections, onDeleteEquipment, onAddEquipment, onNavigate }: { 
+const Dashboard = ({ equipment, inspections, onDeleteEquipment, onAddEquipment, onAddInspection, onNavigate }: { 
   equipment: Equipment[], 
   inspections: Inspection[],
   onDeleteEquipment: (id: string) => void,
   onAddEquipment: (equipment: Equipment[]) => void,
-  onNavigate: (view: 'dashboard' | 'equipment' | 'equipment-new' | 'inspections' | 'inspections-new') => void
+  onAddInspection: (inspection: Inspection) => void,
+  onNavigate: (view: 'dashboard' | 'equipment' | 'equipment-new' | 'inspections' | 'inspections-new' | 'inspection-edit') => void
 }) => {
   
   const stats = {
@@ -663,29 +366,52 @@ const Dashboard = ({ equipment, inspections, onDeleteEquipment, onAddEquipment, 
 
         <h2 className="text-2xl font-bold text-gray-900 mb-6">Schnellaktionen</h2>
         <div className="grid-modern grid-cols-1 gap-4">
-          <button
-            onClick={() => onNavigate('inspections-new')}
-            className="btn-modern btn-primary text-center"
-          >
-            <Calendar className="h-5 w-5" />
-            Neue Prüfung planen
-          </button>
+          <div className="flex space-x-3">
+            <select 
+              className="form-select-modern"
+              onChange={(e) => {
+                const selectedEquipmentId = e.target.value;
+                if (selectedEquipmentId && selectedEquipmentId !== 'select') {
+                  const equipmentItem = equipment.find(eq => eq.id === selectedEquipmentId);
+                  if (equipmentItem) {
+                    // Neue Prüfung für das ausgewählte Gerät erstellen
+                    const newInspection: Inspection = {
+                      id: uuidv4(),
+                      equipmentId: selectedEquipmentId,
+                      type: 'maintenance',
+                      scheduledDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 30 Tage in der Zukunft
+                      inspector: 'Techniker',
+                      status: 'pending',
+                      notes: `Neue Wartung für ${equipmentItem.name} geplant`
+                    };
+                    
+                    // Prüfung zur Liste hinzufügen
+                    onAddInspection(newInspection);
+                    
+                    // Bestätigung anzeigen
+                    alert(`✅ Neue Prüfung erfolgreich erstellt!\n\nGerät: ${equipmentItem.name}\nTyp: Wartung\nGeplant für: ${newInspection.scheduledDate}\nPrüfer: ${newInspection.inspector}\n\nDie Prüfung wurde zur Liste hinzugefügt.`);
+                    
+                    // Select zurücksetzen
+                    e.target.value = 'select';
+                  }
+                }
+              }}
+              defaultValue="select"
+            >
+              <option value="select">Neue Prüfung für Gerät planen...</option>
+              {equipment.map(eq => (
+                <option key={eq.id} value={eq.id}>
+                  {eq.name} ({eq.serialNumber})
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
 
         <div className="mt-8">
-          <CsvImport onEquipmentImport={(newEquipment) => {
-            // Neue Geräte zur bestehenden Liste hinzufügen
-            // Da dies eine lokale Demo-App ist, speichern wir in localStorage
-            const existingEquipment = JSON.parse(localStorage.getItem('equipment') || '[]');
-            const updatedEquipment = [...existingEquipment, ...newEquipment];
-            localStorage.setItem('equipment', JSON.stringify(updatedEquipment));
-            
-            // Bestätigung anzeigen
-            alert(`${newEquipment.length} Geräte wurden erfolgreich importiert und gespeichert!`);
-            
-            // Seite neu laden um die neuen Geräte anzuzeigen
-            window.location.reload();
-          }} />
+          <div className="text-center text-gray-600">
+            <p>CSV-Import-Funktionalität ist derzeit nicht verfügbar.</p>
+          </div>
         </div>
       </div>
     </div>
@@ -695,15 +421,20 @@ const Dashboard = ({ equipment, inspections, onDeleteEquipment, onAddEquipment, 
 
 
 // InspectionList Component  
-const InspectionList = ({ inspections, equipment, onDelete }: { 
+const InspectionList = ({ inspections, equipment, onDelete, onAddInspection, onEditInspection }: { 
   inspections: Inspection[], 
   equipment: Equipment[],
-  onDelete: (id: string) => void 
+  onDelete: (id: string) => void,
+  onAddInspection: (inspection: Inspection) => void,
+  onEditInspection: (inspection: Inspection) => void
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   
-
+  // Alle Geräte, die keine Prüfungen haben
+  const equipmentWithoutInspections = equipment.filter(eq => 
+    !inspections.some(insp => insp.equipmentId === eq.id)
+  );
 
   const filteredInspections = inspections.filter(insp => {
     const equipmentItem = equipment.find(eq => eq.id === insp.equipmentId);
@@ -729,15 +460,14 @@ const InspectionList = ({ inspections, equipment, onDelete }: {
 
   const getTypeBadge = (type: string) => {
     const typeMap = {
-      maintenance: { label: 'Wartung', class: 'badge-primary' },
-      calibration: { label: 'Kalibrierung', class: 'badge-secondary' },
-      certification: { label: 'Zertifizierung', class: 'badge-success' },
-      technical_inspection: { label: 'Technische Prüfung', class: 'badge-primary' },
-      electrical_inspection: { label: 'Elektrische Prüfung', class: 'badge-warning' }
+      maintenance: 'Wartung',
+      certification: 'Zertifizierung',
+      technical_inspection: 'Technische Prüfung',
+      electrical_inspection: 'Elektrische Prüfung'
     };
     
-    const config = typeMap[type as keyof typeof typeMap] || { label: type, class: 'badge-secondary' };
-    return <span className={`badge-modern ${config.class}`}>{config.label}</span>;
+    const label = typeMap[type as keyof typeof typeMap] || type;
+    return <span className="text-sm text-gray-700">{label}</span>;
   };
 
   const handleDelete = (id: string) => {
@@ -756,13 +486,6 @@ const InspectionList = ({ inspections, equipment, onDelete }: {
       <div className="card-modern">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold text-gray-900">Prüfungs-Übersicht</h2>
-          <button 
-            className="btn-modern btn-primary"
-            onClick={() => window.location.href = '/inspections/new'}
-          >
-            <Plus className="h-4 w-4" />
-            Neue Prüfung planen
-          </button>
         </div>
 
         <div className="grid-modern grid-cols-1 md:grid-cols-3 gap-4 mb-6">
@@ -806,6 +529,7 @@ const InspectionList = ({ inspections, equipment, onDelete }: {
         </div>
       </div>
 
+      {/* Tabelle mit allen Prüfungen */}
       <div className="card-modern overflow-hidden max-w-[65%] mx-auto">
         <div className="overflow-x-auto">
           <table className="table-modern w-full table-fixed">
@@ -845,7 +569,7 @@ const InspectionList = ({ inspections, equipment, onDelete }: {
                     </div>
                   </td>
                 </tr>
-                            ) : (
+              ) : (
                 filteredInspections.map(inspection => {
                   const equipmentItem = equipment.find(eq => eq.id === inspection.equipmentId);
                   const equipmentName = equipmentItem?.name || `Gelöschte Anlage (ID: ${inspection.equipmentId})`;
@@ -892,7 +616,7 @@ const InspectionList = ({ inspections, equipment, onDelete }: {
                       </td>
                       <td className="py-4 px-2">
                         <div className="min-w-0">
-                          <div className="transform scale-75 origin-left">
+                          <div style={{ transform: 'scale(0.5)', transformOrigin: 'left center' }}>
                             {getStatusBadge(inspection)}
                           </div>
                         </div>
@@ -900,7 +624,7 @@ const InspectionList = ({ inspections, equipment, onDelete }: {
                       <td className="py-4 px-2">
                         <div className="min-w-0">
                           {inspection.result ? (
-                            <div className="transform scale-75 origin-left">
+                            <div style={{ transform: 'scale(0.5)', transformOrigin: 'left center' }}>
                               <span className={`badge-modern ${
                                 inspection.result === 'passed' ? 'badge-success' :
                                 inspection.result === 'failed' ? 'badge-danger' :
@@ -931,12 +655,12 @@ const InspectionList = ({ inspections, equipment, onDelete }: {
                       <td className="py-4 px-2">
                         <div className="flex space-x-1 min-w-0 justify-start">
                           <button
-                            onClick={() => window.location.href = '/inspections'}
+                            onClick={() => onEditInspection(inspection)}
                             className="btn-modern btn-secondary p-1.5 flex-shrink-0 min-w-[32px] h-8"
                             title="Bearbeiten"
                           >
                             <Edit className="h-3 w-3" />
-                            </button>
+                          </button>
                           <button
                             onClick={() => handleDelete(inspection.id)}
                             className="btn-modern btn-danger p-1.5 flex-shrink-0 min-w-[32px] h-8"
@@ -953,6 +677,98 @@ const InspectionList = ({ inspections, equipment, onDelete }: {
             </tbody>
           </table>
         </div>
+      </div>
+
+      {/* Neue Tabelle: Geräte ohne Prüfungen */}
+      <div className="card-modern">
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">Geräte ohne Prüfungen ({equipmentWithoutInspections.length})</h2>
+        <p className="text-gray-600 mb-6">Diese Geräte haben noch keine Prüfungen oder Wartungsarbeiten geplant.</p>
+        
+        {equipmentWithoutInspections.length === 0 ? (
+          <div className="text-center py-8 text-gray-500">
+            <CheckSquare className="h-12 w-12 mx-auto mb-4 text-gray-400" />
+            <p>Alle Geräte haben bereits Prüfungen geplant.</p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="table-modern w-full min-w-[800px]">
+              <thead>
+                <tr>
+                  <th className="text-left py-3 px-4 w-[15%]">InventarNr</th>
+                  <th className="text-left py-3 px-4 w-[25%]">Gerätename</th>
+                  <th className="text-left py-3 px-4 w-[15%]">Typ</th>
+                  <th className="text-left py-3 px-4 w-[20%]">Standort</th>
+                  <th className="text-left py-3 px-4 w-[12%]">Status</th>
+                  <th className="text-left py-3 px-4 w-[13%]">Aktionen</th>
+                </tr>
+              </thead>
+              <tbody>
+                {equipmentWithoutInspections.map(eq => (
+                  <tr key={eq.id} className="hover:bg-gray-50 transition-colors">
+                    <td className="py-3 px-4">
+                      <span className="text-sm font-mono text-gray-600">{eq.serialNumber}</span>
+                    </td>
+                    <td className="py-3 px-4">
+                      <span className="font-medium text-gray-900">{eq.name}</span>
+                    </td>
+                    <td className="py-3 px-4">
+                      <span className="text-sm text-gray-600">{eq.type}</span>
+                    </td>
+                    <td className="py-3 px-4">
+                      <span className="text-sm text-gray-600">{eq.location}</span>
+                    </td>
+                    <td className="py-3 px-4">
+                      <span className={`px-2 py-1 text-xs rounded-full ${
+                        eq.status === 'active' ? 'bg-green-100 text-green-800' :
+                        eq.status === 'maintenance' ? 'bg-yellow-100 text-yellow-800' :
+                        'bg-gray-100 text-gray-800'
+                      }`}>
+                        {eq.status === 'active' ? 'Aktiv' :
+                         eq.status === 'maintenance' ? 'Wartung' :
+                         'Inaktiv'}
+                      </span>
+                    </td>
+                    <td className="py-3 px-4">
+                      <button
+                        style={{
+                          backgroundColor: '#3b82f6',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '6px',
+                          padding: '2px 4px',
+                          fontSize: '11px',
+                          cursor: 'pointer',
+                          whiteSpace: 'nowrap'
+                        }}
+                        onClick={() => {
+                          // Neue Prüfung für das Gerät anlegen
+                          const newInspection: Inspection = {
+                            id: uuidv4(),
+                            equipmentId: eq.id,
+                            type: 'maintenance',
+                            scheduledDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 30 Tage in der Zukunft
+                            inspector: 'Techniker',
+                            status: 'pending',
+                            notes: `Neue Wartung für ${eq.name} geplant`
+                          };
+                          
+                          // Prüfung zur Liste hinzufügen
+                          onAddInspection(newInspection);
+                          
+                          // Bestätigung anzeigen
+                          alert(`✅ Neue Prüfung erfolgreich erstellt!\n\nGerät: ${eq.name}\nTyp: Wartung\nGeplant für: ${newInspection.scheduledDate}\nPrüfer: ${newInspection.inspector}\n\nDas Gerät wird jetzt aus der Liste "Geräte ohne Prüfungen" entfernt.`);
+                        }}
+                      >
+                        <Plus className="h-2 w-2 mr-0.5" />
+                        Prüfung planen
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -1068,6 +884,24 @@ const EquipmentList = ({ equipment, onDelete, onAddNew }: {
                   </span>
                 </div>
                 
+                {/* Bildanzeige unterhalb des Gerätenamens */}
+                {eq.images && eq.images.length > 0 && eq.images[0].url && (
+                  <div className="card-image mb-3">
+                    <img 
+                      src={eq.images[0].url} 
+                      alt={eq.images[0].description || 'Gerätebild'} 
+                      style={{
+                        width: '160px',
+                        height: '96px',
+                        objectFit: 'cover',
+                        borderRadius: '8px',
+                        display: 'block',
+                        margin: '0 auto'
+                      }}
+                    />
+                  </div>
+                )}
+                
                 <div className="card-content">
                   <div className="space-y-2 text-sm">
                     <div><strong>InventarNr:</strong> {eq.serialNumber}</div>
@@ -1111,13 +945,14 @@ const EquipmentForm = ({ onSave, onCancel }: {
   onSave: (equipment: Equipment) => void,
   onCancel: () => void
 }) => {
-  const [formData, setFormData] = useState<Partial<Equipment> & { imageFile?: string }>({
+  const [formData, setFormData] = useState<Partial<Equipment> & { imageFile?: File, imagePreview?: string }>({
     name: '',
     location: '',
     serialNumber: '',
     status: 'active' as const,
     notes: '',
-    imageFile: ''
+    imageFile: undefined,
+    imagePreview: ''
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -1139,6 +974,29 @@ const EquipmentForm = ({ onSave, onCancel }: {
     return Object.keys(newErrors).length === 0;
   };
 
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // Dateigröße prüfen (max. 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        alert('Bild ist zu groß. Maximale Größe: 5MB');
+        return;
+      }
+
+      // Bild als Base64 konvertieren
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const result = event.target?.result as string;
+        setFormData(prev => ({ 
+          ...prev, 
+          imageFile: file,
+          imagePreview: result
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -1157,10 +1015,10 @@ const EquipmentForm = ({ onSave, onCancel }: {
       purchaseDate: new Date().toISOString().split('T')[0], // Aktuelles Datum als Standard
       status: formData.status!,
       notes: formData.notes || '',
-      images: formData.imageFile ? [{
+      images: formData.imagePreview ? [{
         id: uuidv4(),
-        filename: formData.imageFile,
-        url: '', // URL wird später gesetzt wenn Bild tatsächlich hochgeladen wird
+        filename: formData.imageFile?.name || 'gerätebild.jpg',
+        url: formData.imagePreview,
         description: 'Gerätebild',
         uploadedAt: new Date().toISOString(),
         isMainImage: true
@@ -1236,16 +1094,21 @@ const EquipmentForm = ({ onSave, onCancel }: {
               type="file"
               accept="image/*"
               className="form-input-modern file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (file) {
-                  // Hier können Sie die Bildverarbeitung implementieren
-                  // Für jetzt speichern wir nur den Dateinamen
-                  setFormData(prev => ({ ...prev, imageFile: file.name }));
-                }
-              }}
+              onChange={handleImageChange}
             />
             <p className="text-sm text-gray-500 mt-1">Unterstützte Formate: JPG, PNG, GIF (max. 5MB)</p>
+            
+            {/* Bildvorschau */}
+            {formData.imagePreview && (
+              <div className="mt-3">
+                <img 
+                  src={formData.imagePreview} 
+                  alt="Bildvorschau" 
+                  className="w-32 h-24 object-cover rounded-lg border border-gray-200"
+                />
+                <p className="text-xs text-gray-500 mt-1">Vorschau des ausgewählten Bildes</p>
+              </div>
+            )}
           </div>
 
           <div className="form-group-modern">
@@ -1293,6 +1156,328 @@ const EquipmentForm = ({ onSave, onCancel }: {
   );
 };
 
+// InspectionForm Component
+const InspectionForm = ({ equipment, inspection, onSave, onCancel }: { 
+  equipment: Equipment[],
+  inspection?: Inspection,
+  onSave: (inspection: Inspection) => void,
+  onCancel: () => void
+}) => {
+  const [formData, setFormData] = useState<Partial<Inspection> & { documentFile?: File, documentPreview?: string }>({
+    equipmentId: inspection?.equipmentId || '',
+    type: inspection?.type || 'maintenance',
+    scheduledDate: inspection?.scheduledDate || new Date().toISOString().split('T')[0],
+    inspector: inspection?.inspector || '',
+    status: inspection?.status || 'pending',
+    notes: inspection?.notes || '',
+    inspectionInterval: inspection?.inspectionInterval || 90,
+    result: inspection?.result,
+    findings: inspection?.findings || '',
+    documents: inspection?.documents || [],
+    documentFile: undefined,
+    documentPreview: undefined
+  });
+
+  // Aktualisiere formData wenn sich die inspection ändert
+  useEffect(() => {
+    if (inspection) {
+      setFormData({
+        equipmentId: inspection.equipmentId,
+        type: inspection.type,
+        scheduledDate: inspection.scheduledDate,
+        inspector: inspection.inspector,
+        status: inspection.status,
+        notes: inspection.notes || '',
+        inspectionInterval: inspection.inspectionInterval || 90,
+        result: inspection.result,
+        findings: inspection.findings || '',
+        documents: inspection.documents || [],
+        documentFile: undefined,
+        documentPreview: undefined
+      });
+    } else {
+      // Bei neuen Prüfungen zurücksetzen
+      setFormData({
+        equipmentId: '',
+        type: 'maintenance',
+        scheduledDate: new Date().toISOString().split('T')[0],
+        inspector: '',
+        status: 'pending',
+        notes: '',
+        inspectionInterval: 90,
+        result: undefined,
+        findings: '',
+        documents: [],
+        documentFile: undefined,
+        documentPreview: undefined
+      });
+    }
+  }, [inspection]);
+
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+
+    // Nur bei neuen Prüfungen das Gerät validieren
+    if (!inspection && !formData.equipmentId?.trim()) {
+      newErrors.equipmentId = 'Gerät ist erforderlich';
+    }
+    if (!formData.scheduledDate?.trim()) {
+      newErrors.scheduledDate = 'Datum ist erforderlich';
+    }
+    if (!formData.inspector?.trim()) {
+      newErrors.inspector = 'Prüfer ist erforderlich';
+    }
+    if (!formData.status?.trim()) {
+      newErrors.status = 'Status ist erforderlich';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // Dateigröße prüfen (max. 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        alert('Bild ist zu groß. Maximale Größe: 5MB');
+        return;
+      }
+
+      // Bild als Base64 konvertieren
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const result = event.target?.result as string;
+        setFormData(prev => ({ 
+          ...prev, 
+          documentFile: file,
+          documentPreview: result
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!validateForm()) {
+      return;
+    }
+
+    const inspectionData: Inspection = {
+      id: inspection?.id || uuidv4(),
+      equipmentId: formData.equipmentId || '',
+      type: formData.type!,
+      scheduledDate: formData.scheduledDate!,
+      inspector: formData.inspector!,
+      status: formData.status!,
+      notes: formData.notes || '',
+      inspectionInterval: formData.inspectionInterval,
+      result: formData.result!,
+      findings: formData.findings || '',
+      documents: formData.documentPreview ? [{
+        id: uuidv4(),
+        filename: formData.documentFile?.name || 'prüfungsdokument.pdf',
+        url: formData.documentPreview,
+        description: 'Prüfungsdokument',
+        uploadedAt: new Date().toISOString(),
+        fileSize: formData.documentFile?.size || 0
+      }] : []
+    };
+
+    onSave(inspectionData);
+  };
+
+  const handleInputChange = (field: keyof Inspection, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+    if (errors[field]) {
+      setErrors(prev => ({ ...prev, [field]: '' }));
+    }
+  };
+
+  return (
+    <div className="card-modern">
+      <div className="flex items-center mb-8">
+        <button
+          onClick={onCancel}
+          className="btn-modern btn-secondary mr-4"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Zurück
+        </button>
+        <h1 className="text-3xl font-bold text-gray-900">
+          {inspection ? 'Prüfung bearbeiten' : 'Neue Prüfung anlegen'}
+        </h1>
+      </div>
+
+      <form onSubmit={handleSubmit}>
+        <div className="grid-modern grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Geräteauswahl nur bei neuen Prüfungen anzeigen */}
+          {!inspection && (
+            <div className="form-group-modern">
+              <label className="form-label-modern">Gerät *</label>
+              <select
+                className="form-select-modern"
+                value={formData.equipmentId || ''}
+                onChange={(e) => handleInputChange('equipmentId', e.target.value)}
+              >
+                <option value="">Bitte wählen Sie ein Gerät aus</option>
+                {equipment.map(eq => (
+                  <option key={eq.id} value={eq.id}>
+                    {eq.name} ({eq.serialNumber})
+                  </option>
+                ))}
+              </select>
+              {!formData.equipmentId && (
+                <p className="text-red-500 text-sm mt-1">Bitte wählen Sie ein Gerät aus</p>
+              )}
+            </div>
+          )}
+
+          <div className="form-group-modern">
+            <label className="form-label-modern">Typ *</label>
+            <select
+              className="form-select-modern"
+              value={formData.type || 'maintenance'}
+              onChange={(e) => handleInputChange('type', e.target.value)}
+            >
+              <option value="maintenance">Wartung</option>
+              <option value="certification">Zertifizierung</option>
+              <option value="technical_inspection">Technische Prüfung</option>
+              <option value="electrical_inspection">Elektrische Prüfung</option>
+            </select>
+          </div>
+
+          <div className="form-group-modern">
+            <label className="form-label-modern">Datum *</label>
+            <input
+              type="datetime-local"
+              className={`form-input-modern ${errors.scheduledDate ? 'border-red-500' : ''}`}
+              value={formData.scheduledDate || ''}
+              onChange={(e) => handleInputChange('scheduledDate', e.target.value)}
+            />
+            {errors.scheduledDate && <p className="text-red-500 text-sm mt-1">{errors.scheduledDate}</p>}
+          </div>
+
+          <div className="form-group-modern">
+            <label className="form-label-modern">Prüfer *</label>
+            <input
+              type="text"
+              className={`form-input-modern ${errors.inspector ? 'border-red-500' : ''}`}
+              value={formData.inspector || ''}
+              onChange={(e) => handleInputChange('inspector', e.target.value)}
+              placeholder="z.B. Hans Mueller"
+            />
+            {errors.inspector && <p className="text-red-500 text-sm mt-1">{errors.inspector}</p>}
+          </div>
+
+          <div className="form-group-modern">
+            <label className="form-label-modern">Status *</label>
+            <select
+              className="form-select-modern"
+              value={formData.status || 'pending'}
+              onChange={(e) => handleInputChange('status', e.target.value)}
+            >
+              <option value="pending">Anstehend</option>
+              <option value="completed">Abgeschlossen</option>
+              <option value="cancelled">Abgebrochen</option>
+            </select>
+          </div>
+
+          <div className="form-group-modern md:col-span-2">
+            <label className="form-label-modern">Notizen</label>
+            <textarea
+              className="form-input-modern h-24"
+              value={formData.notes || ''}
+              onChange={(e) => handleInputChange('notes', e.target.value)}
+              placeholder="Zusätzliche Notizen zur Prüfung..."
+            />
+          </div>
+
+          <div className="form-group-modern">
+            <label className="form-label-modern">Intervall *</label>
+            <input
+              type="number"
+              className={`form-input-modern ${errors.inspectionInterval ? 'border-red-500' : ''}`}
+              value={formData.inspectionInterval || ''}
+              onChange={(e) => handleInputChange('inspectionInterval', e.target.value)}
+              placeholder="Tage"
+            />
+            {errors.inspectionInterval && <p className="text-red-500 text-sm mt-1">{errors.inspectionInterval}</p>}
+          </div>
+
+          <div className="form-group-modern md:col-span-2">
+            <label className="form-label-modern">Ergebnis *</label>
+            <select
+              className="form-select-modern"
+              value={formData.result || 'pending'}
+              onChange={(e) => handleInputChange('result', e.target.value)}
+            >
+              <option value="pending">In Bearbeitung</option>
+              <option value="passed">Bestanden</option>
+              <option value="failed">Nicht bestanden</option>
+              <option value="conditional">Bedingt</option>
+            </select>
+          </div>
+
+          <div className="form-group-modern md:col-span-2">
+            <label className="form-label-modern">Findings</label>
+            <textarea
+              className="form-input-modern h-24"
+              value={formData.findings || ''}
+              onChange={(e) => handleInputChange('findings', e.target.value)}
+              placeholder="Zusätzliche Findings..."
+            />
+          </div>
+
+          <div className="form-group-modern">
+            <label className="form-label-modern">Dokumente</label>
+            <input
+              type="file"
+              accept="application/pdf"
+              className="form-input-modern file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+              onChange={handleImageChange}
+            />
+            <p className="text-sm text-gray-500 mt-1">Unterstützte Formate: PDF (max. 5MB)</p>
+            
+            {/* Dokumentvorschau */}
+            {formData.documentPreview && (
+              <div className="mt-3">
+                <iframe 
+                  src={formData.documentPreview} 
+                  title="Dokumentvorschau" 
+                  className="w-full h-64 border border-gray-200 rounded-lg"
+                />
+                <p className="text-xs text-gray-500 mt-1">Vorschau des ausgewählten Dokumentes</p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="flex justify-end space-x-4 mt-8">
+          <button
+            type="button"
+            onClick={onCancel}
+            className="btn-modern btn-secondary"
+          >
+            Abbrechen
+          </button>
+          <button
+            type="submit"
+            className="btn-modern btn-primary"
+          >
+            <Save className="h-4 w-4" />
+            {inspection ? 'Prüfung speichern' : 'Prüfung anlegen'}
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+};
+
 function App() {
   // Beim Start Geräte aus localStorage laden, falls vorhanden
   const [equipment, setEquipment] = useState<Equipment[]>(() => {
@@ -1303,8 +1488,8 @@ function App() {
     return mockEquipment;
   });
   const [inspections, setInspections] = useState<Inspection[]>(mockInspections);
-  const [currentView, setCurrentView] = useState<'dashboard' | 'equipment' | 'equipment-new' | 'inspections' | 'inspections-new'>('dashboard');
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [currentView, setCurrentView] = useState<'dashboard' | 'equipment' | 'equipment-new' | 'inspections' | 'inspections-new' | 'inspection-edit'>('dashboard');
+  const [editingInspection, setEditingInspection] = useState<Inspection | null>(null);
 
   const deleteEquipment = (id: string) => {
     setEquipment(prev => {
@@ -1330,152 +1515,35 @@ function App() {
     setInspections(prev => prev.filter(insp => insp.id !== id));
   };
 
-  // Login-Komponente
-  const LoginPage = () => {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
-
-    const handleLogin = (e: React.FormEvent) => {
-      e.preventDefault();
-      setIsLoading(true);
-      setError('');
-
-      // Simuliere Login-Verzögerung
-      setTimeout(() => {
-        if (username === 'Technik' && password === 'technik1') {
-          setIsLoggedIn(true);
-          localStorage.setItem('isLoggedIn', 'true');
-        } else {
-          setError('Ungültige Anmeldedaten. Bitte versuchen Sie es erneut.');
-        }
-        setIsLoading(false);
-      }, 1000);
-    };
-
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-900 via-cyan-800 to-blue-600 flex items-center justify-center p-4">
-        {/* Wasser-Animation im Hintergrund */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-40 -left-40 w-80 h-80 bg-blue-400/20 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute -bottom-40 -right-40 w-80 h-80 bg-cyan-400/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-blue-300/10 rounded-full blur-3xl animate-pulse delay-500"></div>
-        </div>
-
-        {/* Login-Container */}
-        <div className="relative z-10 w-full max-w-lg">
-          {/* Logo und Titel */}
-          <div className="text-center mb-10">
-            <div className="inline-flex items-center justify-center w-24 h-24 bg-white/20 backdrop-blur-md rounded-full mb-8 border border-white/30">
-              <Package className="h-12 w-12 text-white" />
-            </div>
-            <h1 className="text-5xl font-bold text-white mb-3">LA OLA</h1>
-            <p className="text-2xl text-white/80">Technische Dokumentation</p>
-            <div className="flex items-center justify-center space-x-3 mt-4">
-              <div className="w-3 h-3 bg-blue-300 rounded-full animate-bounce"></div>
-              <div className="w-3 h-3 bg-cyan-300 rounded-full animate-bounce delay-100"></div>
-              <div className="w-3 h-3 bg-blue-300 rounded-full animate-bounce delay-200"></div>
-            </div>
-          </div>
-
-          {/* Login-Formular */}
-          <div className="bg-white/10 backdrop-blur-md rounded-3xl p-12 border border-white/20 shadow-2xl">
-            <form onSubmit={handleLogin} className="space-y-10">
-              <div>
-                <label className="block text-xl font-medium text-white/90 mb-4 text-center">
-                  Benutzername
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-8 flex items-center pointer-events-none">
-                    <User className="h-7 w-7 text-white/60" />
-                  </div>
-                  <input
-                    type="text"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    className="w-full pl-24 pr-8 py-8 bg-white/20 border border-white/30 rounded-2xl text-white placeholder-white/60 focus:outline-none focus:ring-4 focus:ring-blue-400 focus:border-transparent transition-all duration-200 text-xl"
-                    placeholder="Benutzername eingeben"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xl font-medium text-white/90 mb-4 text-center">
-                  Passwort
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-8 flex items-center pointer-events-none">
-                    <CheckSquare className="h-7 w-7 text-white/60" />
-                  </div>
-                  <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="w-full pl-24 pr-8 py-8 bg-white/20 border border-white/30 rounded-2xl text-white placeholder-white/60 focus:outline-none focus:ring-4 focus:ring-blue-400 focus:border-transparent transition-all duration-200 text-xl"
-                    placeholder="Passwort eingeben"
-                    required
-                  />
-                </div>
-              </div>
-
-              {error && (
-                <div className="bg-red-500/20 border border-red-400/30 rounded-2xl p-5">
-                  <p className="text-red-200 text-lg text-center">{error}</p>
-                </div>
-              )}
-
-              <div className="flex justify-center pt-32">
-                <button
-                  type="submit"
-                  disabled={isLoading}
-                  style={{
-                    backgroundColor: '#1e3a8a',
-                    borderColor: '#1e40af',
-                    borderWidth: '3px'
-                  }}
-                  className="w-[500px] text-white font-bold py-8 px-12 rounded-2xl transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-400 focus:ring-offset-2 focus:ring-offset-transparent disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none text-2xl shadow-2xl hover:bg-blue-800"
-                >
-                  {isLoading ? (
-                    <div className="flex items-center justify-center space-x-4">
-                      <div className="w-7 h-7 border-3 border-white/30 border-t-white rounded-full animate-spin"></div>
-                      <span>Anmeldung läuft...</span>
-                    </div>
-                  ) : (
-                    <div className="flex items-center justify-center space-x-4">
-                      <CheckSquare className="h-8 w-8" />
-                      <span>Anmelden</span>
-                    </div>
-                  )}
-                </button>
-              </div>
-            </form>
-          </div>
-
-          {/* Footer */}
-          <div className="text-center mt-8">
-            <p className="text-white/60 text-base">
-              Freizeitbad LA OLA • Technische Verwaltung
-            </p>
-          </div>
-        </div>
-      </div>
-    );
+  const addInspection = (newInspection: Inspection) => {
+    setInspections(prev => [...prev, newInspection]);
   };
 
-  // Prüfe Login-Status beim Laden
-  React.useEffect(() => {
-    const loginStatus = localStorage.getItem('isLoggedIn');
-    if (loginStatus === 'true') {
-      setIsLoggedIn(true);
-    }
-  }, []);
+  const updateInspection = (updatedInspection: Inspection) => {
+    setInspections(prev => prev.map(insp => 
+      insp.id === updatedInspection.id ? updatedInspection : insp
+    ));
+  };
 
-  // Zeige Login-Seite wenn nicht eingeloggt
-  if (!isLoggedIn) {
-    return <LoginPage />;
-  }
+  const startEditInspection = (inspection: Inspection) => {
+    setEditingInspection(inspection);
+    setCurrentView('inspection-edit');
+  };
+
+  const cancelEditInspection = () => {
+    setEditingInspection(null);
+    setCurrentView('inspections');
+  };
+
+  const saveInspection = (inspection: Inspection) => {
+    if (editingInspection) {
+      updateInspection(inspection);
+    } else {
+      addInspection(inspection);
+    }
+    setEditingInspection(null);
+    setCurrentView('inspections');
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-600 via-blue-600 to-cyan-600">
@@ -1522,19 +1590,6 @@ function App() {
                     Prüfungen & Wartung
                   </button>
                 </div>
-
-                <div className="header-button-container">
-                  <button 
-                    onClick={() => {
-                      setIsLoggedIn(false);
-                      localStorage.removeItem('isLoggedIn');
-                    }} 
-                    className="nav-link bg-red-700 hover:bg-red-600 text-white px-6 py-3 rounded-lg transition-all duration-200 hover:scale-105"
-                  >
-                    <User className="h-4 w-4" />
-                    Abmelden
-                  </button>
-                </div>
               </div>
             </div>
           </div>
@@ -1547,6 +1602,7 @@ function App() {
               inspections={inspections} 
               onDeleteEquipment={deleteEquipment} 
               onAddEquipment={addEquipment}
+              onAddInspection={addInspection}
               onNavigate={setCurrentView}
             />
           )}
@@ -1574,6 +1630,25 @@ function App() {
               inspections={inspections}
               equipment={equipment}
               onDelete={deleteInspection}
+              onAddInspection={addInspection}
+              onEditInspection={startEditInspection}
+            />
+          )}
+
+          {currentView === 'inspections-new' && (
+            <InspectionForm 
+              equipment={equipment}
+              onSave={saveInspection}
+              onCancel={() => setCurrentView('inspections')}
+            />
+          )}
+
+          {currentView === 'inspection-edit' && editingInspection && (
+            <InspectionForm 
+              inspection={editingInspection}
+              equipment={equipment}
+              onSave={saveInspection}
+              onCancel={cancelEditInspection}
             />
           )}
         </main>
