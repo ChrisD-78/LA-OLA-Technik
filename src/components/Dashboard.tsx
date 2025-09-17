@@ -5,8 +5,7 @@ import {
   CheckSquare, 
   AlertTriangle, 
   Plus,
-  TrendingUp,
-  Clock
+  TrendingUp
 } from 'lucide-react';
 import { Equipment, Inspection, DashboardStats } from '../types';
 import { isBefore } from 'date-fns';
@@ -65,7 +64,7 @@ const Dashboard: React.FC<DashboardProps> = ({ equipment, inspections }) => {
       </div>
 
       {/* Statistics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         <div className="card">
           <div className="flex items-center">
             <Package className="h-8 w-8 text-blue-600 mr-4" />
@@ -97,15 +96,6 @@ const Dashboard: React.FC<DashboardProps> = ({ equipment, inspections }) => {
           </div>
         </div>
 
-        <div className="card">
-          <div className="flex items-center">
-            <Clock className="h-8 w-8 text-purple-600 mr-4" />
-            <div>
-              <p className="text-sm font-medium text-gray-600">Prüfungen diesen Monat</p>
-              <p className="text-2xl font-bold text-gray-900">{stats.completedInspectionsThisMonth}</p>
-            </div>
-          </div>
-        </div>
       </div>
 
     </div>
