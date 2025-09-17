@@ -4,14 +4,12 @@ import {
   Package, 
   CheckSquare, 
   AlertTriangle, 
-  Calendar,
   Plus,
   TrendingUp,
   Clock
 } from 'lucide-react';
 import { Equipment, Inspection, DashboardStats } from '../types';
-import { format, isAfter, isBefore, addDays } from 'date-fns';
-import { de } from 'date-fns/locale';
+import { isBefore } from 'date-fns';
 
 interface DashboardProps {
   equipment: Equipment[];
@@ -35,18 +33,6 @@ const Dashboard: React.FC<DashboardProps> = ({ equipment, inspections }) => {
     ).length
   };
 
-  const upcomingInspections = inspections
-    .filter(insp => insp.status === 'pending')
-    .sort((a, b) => new Date(a.scheduledDate).getTime() - new Date(b.scheduledDate).getTime())
-    .slice(0, 5);
-
-  const overdueInspections = inspections.filter(insp => 
-    insp.status === 'pending' && isBefore(new Date(insp.scheduledDate), today)
-  );
-
-  const getEquipmentById = (id: string) => {
-    return equipment.find(eq => eq.id === id);
-  };
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -61,15 +47,6 @@ const Dashboard: React.FC<DashboardProps> = ({ equipment, inspections }) => {
     }
   };
 
-  const getInspectionStatusBadge = (inspection: Inspection) => {
-    if (inspection.status === 'completed') {
-      return <span className="badge badge-success">Abgeschlossen</span>;
-    }
-    if (isBefore(new Date(inspection.scheduledDate), today)) {
-      return <span className="badge badge-danger">Überfällig</span>;
-    }
-    return <span className="badge badge-warning">Anstehend</span>;
-  };
 
   return (
     <div>
@@ -140,79 +117,6 @@ const Dashboard: React.FC<DashboardProps> = ({ equipment, inspections }) => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Upcoming Inspections */}
-        <div className="card">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold text-gray-900">Anstehende Prüfungen</h2>
-            <Link to="/inspections" className="text-blue-600 hover:text-blue-800 text-sm">
-              Alle anzeigen
-            </Link>
-          </div>
-          
-          {upcomingInspections.length === 0 ? (
-            <div className="empty-state">
-              <Calendar className="empty-state-icon" />
-              <p>Keine anstehenden Prüfungen</p>
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {upcomingInspections.map(inspection => {
-                const equipment = getEquipmentById(inspection.equipmentId);
-                return (
-                  <div key={inspection.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                    <div>
-                      <p className="font-medium text-gray-900">{equipment?.name}</p>
-                      <p className="text-sm text-gray-600">
-                        {format(new Date(inspection.scheduledDate), 'dd.MM.yyyy', { locale: de })}
-                      </p>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      {getInspectionStatusBadge(inspection)}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
-
-        {/* Overdue Inspections */}
-        <div className="card">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold text-gray-900">Überfällige Prüfungen</h2>
-            {overdueInspections.length > 0 && (
-              <span className="badge badge-danger">{overdueInspections.length}</span>
-            )}
-          </div>
-          
-          {overdueInspections.length === 0 ? (
-            <div className="empty-state">
-              <CheckSquare className="empty-state-icon" />
-              <p>Keine überfälligen Prüfungen</p>
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {overdueInspections.slice(0, 5).map(inspection => {
-                const equipment = getEquipmentById(inspection.equipmentId);
-                return (
-                  <div key={inspection.id} className="flex items-center justify-between p-3 bg-red-50 rounded-lg border border-red-200">
-                    <div>
-                      <p className="font-medium text-gray-900">{equipment?.name}</p>
-                      <p className="text-sm text-red-600">
-                        Überfällig seit {format(new Date(inspection.scheduledDate), 'dd.MM.yyyy', { locale: de })}
-                      </p>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <span className="badge badge-danger">Überfällig</span>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
-      </div>
     </div>
   );
 };
