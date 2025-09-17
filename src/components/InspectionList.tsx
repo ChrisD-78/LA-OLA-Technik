@@ -50,14 +50,16 @@ const InspectionList: React.FC<InspectionListProps> = ({ inspections, equipment,
 
   const getTypeBadge = (type: string) => {
     switch (type) {
-      case 'safety':
-        return <span className="badge badge-danger">Sicherheit</span>;
+      case 'measurement_devices':
+        return <span className="badge badge-info">Messgeräte</span>;
       case 'maintenance':
         return <span className="badge badge-warning">Wartung</span>;
-      case 'calibration':
-        return <span className="badge badge-secondary">Kalibrierung</span>;
-      case 'certification':
-        return <span className="badge badge-success">Zertifizierung</span>;
+      case 'technical_inspection':
+        return <span className="badge badge-primary">Technische Prüfung</span>;
+      case 'electrical_inspection':
+        return <span className="badge badge-danger">Elektrische Prüfung</span>;
+      case 'ventilation_systems':
+        return <span className="badge badge-secondary">Lüftungsanlagen</span>;
       default:
         return <span className="badge badge-secondary">{type}</span>;
     }

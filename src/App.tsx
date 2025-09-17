@@ -617,10 +617,11 @@ const InspectionList = ({ inspections, equipment, onDelete, onAddInspection, onE
 
   const getTypeBadge = (type: string) => {
     const typeMap = {
+      measurement_devices: 'Messgeräte',
       maintenance: 'Wartung',
-      certification: 'Zertifizierung',
       technical_inspection: 'Technische Prüfung',
-      electrical_inspection: 'Elektrische Prüfung'
+      electrical_inspection: 'Elektrische Prüfung',
+      ventilation_systems: 'Lüftungsanlagen'
     };
     
     const label = typeMap[type as keyof typeof typeMap] || type;
@@ -1511,10 +1512,11 @@ const InspectionForm = ({ equipment, inspection, onSave, onCancel }: {
               value={formData.type || 'maintenance'}
               onChange={(e) => handleInputChange('type', e.target.value)}
             >
+              <option value="measurement_devices">Messgeräte</option>
               <option value="maintenance">Wartung</option>
-              <option value="certification">Zertifizierung</option>
               <option value="technical_inspection">Technische Prüfung</option>
               <option value="electrical_inspection">Elektrische Prüfung</option>
+              <option value="ventilation_systems">Lüftungsanlagen</option>
             </select>
           </div>
 

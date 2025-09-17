@@ -36,7 +36,7 @@ export interface InspectionDocument {
 export interface Inspection {
   id: string;
   equipmentId: string;
-  type: 'maintenance' | 'calibration' | 'certification' | 'technical' | 'electrical' | 'technical_inspection' | 'electrical_inspection';
+  type: 'measurement_devices' | 'maintenance' | 'technical_inspection' | 'electrical_inspection' | 'ventilation_systems';
   scheduledDate: string;
   completedDate?: string;
   inspector: string;
@@ -53,7 +53,7 @@ export interface Inspection {
 export interface InspectionTemplate {
   id: string;
   name: string;
-  type: 'maintenance' | 'calibration' | 'certification' | 'technical' | 'electrical' | 'technical_inspection' | 'electrical_inspection';
+  type: 'measurement_devices' | 'maintenance' | 'technical_inspection' | 'electrical_inspection' | 'ventilation_systems';
   frequency: number; // in days
   description: string;
   checklist?: string[];

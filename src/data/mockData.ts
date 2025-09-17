@@ -95,7 +95,7 @@ export const mockInspections: Inspection[] = [
   {
     id: '3',
     equipmentId: '3',
-    type: 'certification',
+    type: 'technical_inspection',
     scheduledDate: '2024-06-01',
     inspector: 'TÜV Süd',
     status: 'pending',
@@ -168,7 +168,7 @@ export const mockInspectionTemplates: InspectionTemplate[] = [
   {
     id: '3',
     name: 'TÜV-Prüfung Hebezeuge',
-    type: 'certification',
+    type: 'technical_inspection',
     frequency: 365,
     description: 'Jährliche TÜV-Prüfung für Hebezeuge nach BetrSichV',
     checklist: [
@@ -182,7 +182,7 @@ export const mockInspectionTemplates: InspectionTemplate[] = [
   {
     id: '4',
     name: 'Kalibrierung Messgeräte',
-    type: 'calibration',
+    type: 'measurement_devices',
     frequency: 90,
     description: 'Vierteljährliche Kalibrierung von Messgeräten',
     checklist: [

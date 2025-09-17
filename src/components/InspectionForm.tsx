@@ -25,7 +25,7 @@ const InspectionForm: React.FC<InspectionFormProps> = ({ equipment, inspections,
 
   const [formData, setFormData] = useState<Partial<Inspection>>({
     equipmentId: '',
-    type: 'maintenance',
+    type: 'measurement_devices',
     scheduledDate: '',
     inspector: '',
     status: 'pending',
@@ -152,10 +152,11 @@ const InspectionForm: React.FC<InspectionFormProps> = ({ equipment, inspections,
                 value={formData.type || ''}
                 onChange={(e) => handleInputChange('type', e.target.value)}
               >
+                <option value="measurement_devices">Messgeräte</option>
                 <option value="maintenance">Wartung</option>
-                <option value="safety">Sicherheit</option>
-                <option value="calibration">Kalibrierung</option>
-                <option value="certification">Zertifizierung</option>
+                <option value="technical_inspection">Technische Prüfung</option>
+                <option value="electrical_inspection">Elektrische Prüfung</option>
+                <option value="ventilation_systems">Lüftungsanlagen</option>
               </select>
               {errors.type && <p className="text-red-500 text-sm mt-1">{errors.type}</p>}
             </div>

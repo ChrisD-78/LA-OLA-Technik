@@ -17,7 +17,8 @@ import {
   Shield,
   FileText,
   Battery,
-  Power
+  Power,
+  Wind
 } from 'lucide-react';
 import { Inspection, Equipment } from '../types';
 
@@ -36,7 +37,7 @@ const ElektrischePruefungen: React.FC<ElektrischePruefungenProps> = ({ inspectio
   // Filtere nur elektrische Prüfungen
   const elektrischePruefungen = inspections.filter(insp => 
     insp.category === 'elektrische_pruefung' || 
-    insp.type === 'electrical' ||
+    insp.type === 'electrical_inspection' ||
     insp.notes?.toLowerCase().includes('elektrisch') ||
     insp.notes?.toLowerCase().includes('strom') ||
     insp.notes?.toLowerCase().includes('spannung') ||
@@ -84,12 +85,14 @@ const ElektrischePruefungen: React.FC<ElektrischePruefungenProps> = ({ inspectio
 
   const getTypeIcon = (type: string) => {
     switch (type) {
-      case 'electrical':
+      case 'electrical_inspection':
         return <Zap className="h-5 w-5 text-yellow-500" />;
-      case 'safety':
-        return <Shield className="h-5 w-5 text-red-500" />;
-      case 'calibration':
+      case 'technical_inspection':
+        return <Shield className="h-5 w-5 text-blue-500" />;
+      case 'measurement_devices':
         return <Battery className="h-5 w-5 text-green-500" />;
+      case 'ventilation_systems':
+        return <Wind className="h-5 w-5 text-gray-500" />;
       default:
         return <Power className="h-5 w-5 text-blue-500" />;
     }
@@ -266,9 +269,11 @@ const ElektrischePruefungen: React.FC<ElektrischePruefungenProps> = ({ inspectio
                         <div className="flex items-center">
                           {getTypeIcon(pruefung.type)}
                           <span className="ml-2">
-                            {pruefung.type === 'electrical' ? 'Elektrische Prüfung' :
-                             pruefung.type === 'calibration' ? 'Kalibrierung' :
-                             pruefung.type === 'electrical_inspection' ? 'Elektrische Prüfung' :
+                            {pruefung.type === 'electrical_inspection' ? 'Elektrische Prüfung' :
+                             pruefung.type === 'measurement_devices' ? 'Messgeräte' :
+                             pruefung.type === 'technical_inspection' ? 'Technische Prüfung' :
+                             pruefung.type === 'ventilation_systems' ? 'Lüftungsanlagen' :
+                             pruefung.type === 'maintenance' ? 'Wartung' :
                              pruefung.type}
                           </span>
                         </div>
