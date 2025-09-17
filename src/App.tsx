@@ -1836,7 +1836,7 @@ function App() {
                     className="nav-link bg-blue-800 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition-all duration-200 hover:scale-105"
                   >
                     <Package className="h-4 w-4" />
-                    Geräte
+                    Geräte-Übersicht
                   </button>
                 </div>
 
