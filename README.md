@@ -36,7 +36,12 @@ Eine moderne Webanwendung zur Verwaltung und Dokumentation aller technischen Anl
 
 ## 🚀 Online-Version
 
-**Live-Anwendung**: [https://la-ola-technik.netlify.app](https://la-ola-technik.netlify.app)
+**Live-Anwendung**: [https://laola-technik.netlify.app](https://laola-technik.netlify.app)
+
+### 🔄 Automatisches Deployment
+- **GitHub Repository**: [https://github.com/ChrisD-78/LA-OLA-Technik](https://github.com/ChrisD-78/LA-OLA-Technik)
+- **Auto-Deploy**: Jeder Push zum `main` Branch löst automatisch ein neues Deployment aus
+- **Build-Status**: Wird in GitHub Commits angezeigt
 
 ## 🔑 Anmeldedaten
 
