@@ -325,8 +325,23 @@ body {
 
 /* Horizontales Scrolling für Tabellen */
 .overflow-x-auto {
+  overflow-x: auto !important;
+  overflow-y: hidden;
   scrollbar-width: thin;
   scrollbar-color: #cbd5e1 #f1f5f9;
+  white-space: nowrap;
+}
+
+/* Tabellen für horizontales Scrolling optimieren */
+.table-modern {
+  table-layout: auto !important;
+  width: max-content !important;
+}
+
+.table-modern th,
+.table-modern td {
+  white-space: nowrap;
+  min-width: fit-content;
 }
 
 .overflow-x-auto::-webkit-scrollbar {

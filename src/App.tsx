@@ -775,18 +775,18 @@ const InspectionList = ({ inspections, equipment, onDelete, onAddInspection, onE
       <div className="card-modern max-w-[98%] mx-auto">
         {/* Fixer Header */}
         <div className="bg-gray-50 border-b-2 border-gray-300 overflow-x-auto">
-          <table className="table-modern w-full min-w-[1200px]">
+          <table className="table-modern min-w-[1400px] w-max">
             <colgroup>
-              <col className="w-[9%]" />
-              <col className="w-[15%]" />
-              <col className="w-[7%]" />
-              <col className="w-[8%]" />
-              <col className="w-[7%]" />
-              <col className="w-[6%]" />
-              <col className="w-[6%]" />
-              <col className="w-[7%]" />
-              <col className="w-[7%]" />
-              <col className="w-[16%]" />
+              <col style={{width: '120px'}} />
+              <col style={{width: '200px'}} />
+              <col style={{width: '100px'}} />
+              <col style={{width: '120px'}} />
+              <col style={{width: '100px'}} />
+              <col style={{width: '80px'}} />
+              <col style={{width: '80px'}} />
+              <col style={{width: '100px'}} />
+              <col style={{width: '100px'}} />
+              <col style={{width: '180px'}} />
             </colgroup>
             <thead>
               <tr>
@@ -807,18 +807,18 @@ const InspectionList = ({ inspections, equipment, onDelete, onAddInspection, onE
         
         {/* Scrollbarer Body */}
         <div style={{ height: '400px', overflowY: 'auto', overflowX: 'auto' }}>
-          <table className="table-modern w-full min-w-[1200px]">
+          <table className="table-modern min-w-[1400px] w-max">
             <colgroup>
-              <col className="w-[9%]" />
-              <col className="w-[15%]" />
-              <col className="w-[7%]" />
-              <col className="w-[8%]" />
-              <col className="w-[7%]" />
-              <col className="w-[6%]" />
-              <col className="w-[6%]" />
-              <col className="w-[7%]" />
-              <col className="w-[7%]" />
-              <col className="w-[16%]" />
+              <col style={{width: '120px'}} />
+              <col style={{width: '200px'}} />
+              <col style={{width: '100px'}} />
+              <col style={{width: '120px'}} />
+              <col style={{width: '100px'}} />
+              <col style={{width: '80px'}} />
+              <col style={{width: '80px'}} />
+              <col style={{width: '100px'}} />
+              <col style={{width: '100px'}} />
+              <col style={{width: '180px'}} />
             </colgroup>
             <tbody>
               {filteredInspections.length === 0 ? (
