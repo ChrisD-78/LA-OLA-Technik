@@ -222,17 +222,17 @@ const TechnischePruefungen: React.FC<TechnischePruefungenProps> = ({ inspections
 
       {/* Prüfungen Table */}
       <div className="card-modern overflow-hidden max-w-[98%] mx-auto">
-        <div className="table-container">
+        <div className="table-container" style={{ height: '70vh', overflow: 'auto' }}>
           <table className="table-modern min-w-[1300px] w-max">
             <thead>
               <tr>
-                <th className="text-left py-4 px-4">Anlage</th>
-                <th className="text-left py-4 px-4">Prüfungstyp</th>
-                <th className="text-left py-4 px-4">Geplant für</th>
-                <th className="text-left py-4 px-4">Prüfer</th>
-                <th className="text-left py-4 px-4">Status</th>
-                <th className="text-left py-4 px-4">Ergebnis</th>
-                <th className="text-left py-4 px-4">Aktionen</th>
+                <th className="text-left py-4 px-4" style={{ position: 'sticky', top: 0, zIndex: 10, backgroundColor: 'rgba(249, 250, 251, 0.95)', backdropFilter: 'blur(10px)', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)' }}>Anlage</th>
+                <th className="text-left py-4 px-4" style={{ position: 'sticky', top: 0, zIndex: 10, backgroundColor: 'rgba(249, 250, 251, 0.95)', backdropFilter: 'blur(10px)', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)' }}>Prüfungstyp</th>
+                <th className="text-left py-4 px-4" style={{ position: 'sticky', top: 0, zIndex: 10, backgroundColor: 'rgba(249, 250, 251, 0.95)', backdropFilter: 'blur(10px)', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)' }}>Geplant für</th>
+                <th className="text-left py-4 px-4" style={{ position: 'sticky', top: 0, zIndex: 10, backgroundColor: 'rgba(249, 250, 251, 0.95)', backdropFilter: 'blur(10px)', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)' }}>Prüfer</th>
+                <th className="text-left py-4 px-4" style={{ position: 'sticky', top: 0, zIndex: 10, backgroundColor: 'rgba(249, 250, 251, 0.95)', backdropFilter: 'blur(10px)', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)' }}>Status</th>
+                <th className="text-left py-4 px-4" style={{ position: 'sticky', top: 0, zIndex: 10, backgroundColor: 'rgba(249, 250, 251, 0.95)', backdropFilter: 'blur(10px)', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)' }}>Ergebnis</th>
+                <th className="text-left py-4 px-4" style={{ position: 'sticky', top: 0, zIndex: 10, backgroundColor: 'rgba(249, 250, 251, 0.95)', backdropFilter: 'blur(10px)', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)' }}>Aktionen</th>
               </tr>
             </thead>
             <tbody>

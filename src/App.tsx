@@ -773,7 +773,7 @@ const InspectionList = ({ inspections, equipment, onDelete, onAddInspection, onE
 
       {/* Tabelle mit allen Prüfungen */}
       <div className="card-modern max-w-[98%] mx-auto">
-        <div className="table-container">
+        <div className="table-container" style={{ height: '70vh', overflow: 'auto' }}>
           <table className="table-modern w-full" style={{ minWidth: '1400px' }}>
             <thead className="bg-gray-50">
               <tr>
