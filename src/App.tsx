@@ -21,6 +21,7 @@ import { mockEquipment, mockInspections } from './data/mockData';
 import { v4 as uuidv4 } from 'uuid';
 import { equipmentApi, inspectionsApi } from './lib/api';
 import { testSupabaseConnection } from './lib/supabase';
+import { initializeLocalData } from './lib/localApi';
 
 // Login Component
 const LoginPage = ({ onLogin }: { onLogin: () => void }) => {
@@ -1763,18 +1764,24 @@ function App() {
         const isLocalMode = supabaseUrl.includes('dummy');
         
         if (isLocalMode) {
-          console.log('🏠 Lokaler Modus erkannt - verwende Mock-Daten direkt');
-          console.log('📝 Lade lokale Beispieldaten...');
+          console.log('🏠 Lokaler Modus erkannt - verwende lokale Persistierung');
+          console.log('📝 Initialisiere LocalStorage mit Mock-Daten...');
           
-          // Simuliere kurze Ladezeit für realistische UX
-          await new Promise(resolve => setTimeout(resolve, 500));
+          // Initialisiere LocalStorage mit Mock-Daten falls leer
+          await initializeLocalData(mockEquipment, mockInspections);
           
-          setEquipment(mockEquipment);
-          setInspections(mockInspections);
+          // Lade Daten aus LocalStorage (können bereits geänderte Daten sein)
+          const [equipmentData, inspectionsData] = await Promise.all([
+            equipmentApi.getAll(),
+            inspectionsApi.getAll()
+          ]);
           
-          console.log('✅ Mock-Daten geladen:', {
-            equipmentCount: mockEquipment.length,
-            inspectionsCount: mockInspections.length
+          setEquipment(equipmentData);
+          setInspections(inspectionsData);
+          
+          console.log('✅ Lokale Daten geladen:', {
+            equipmentCount: equipmentData.length,
+            inspectionsCount: inspectionsData.length
           });
           return;
         }

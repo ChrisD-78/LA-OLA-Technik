@@ -1,10 +1,21 @@
 import { supabase } from './supabase'
 import { Equipment, Inspection } from '../types'
+import { localEquipmentApi, localInspectionsApi } from './localApi'
+
+// Prüfe ob wir im lokalen Modus sind
+const isLocalMode = () => {
+  const supabaseUrl = process.env.REACT_APP_SUPABASE_URL || 'https://dummy.supabase.co';
+  return supabaseUrl.includes('dummy');
+};
 
 // Equipment API Functions
 export const equipmentApi = {
   // Alle Geräte abrufen
   async getAll(): Promise<Equipment[]> {
+    if (isLocalMode()) {
+      return localEquipmentApi.getAll();
+    }
+
     const { data, error } = await supabase
       .from('equipment')
       .select('*')
@@ -33,6 +44,10 @@ export const equipmentApi = {
 
   // Einzelnes Gerät abrufen
   async getById(id: string): Promise<Equipment | null> {
+    if (isLocalMode()) {
+      return localEquipmentApi.getById(id);
+    }
+
     const { data, error } = await supabase
       .from('equipment')
       .select('*')
@@ -61,6 +76,10 @@ export const equipmentApi = {
 
   // Neues Gerät erstellen
   async create(equipment: Omit<Equipment, 'id'>): Promise<Equipment> {
+    if (isLocalMode()) {
+      return localEquipmentApi.create(equipment);
+    }
+
     const { data, error } = await supabase
       .from('equipment')
       .insert({
@@ -100,6 +119,10 @@ export const equipmentApi = {
 
   // Gerät aktualisieren
   async update(id: string, equipment: Partial<Equipment>): Promise<Equipment> {
+    if (isLocalMode()) {
+      return localEquipmentApi.update(id, equipment);
+    }
+
     const { data, error } = await supabase
       .from('equipment')
       .update({
@@ -141,6 +164,10 @@ export const equipmentApi = {
 
   // Gerät löschen
   async delete(id: string): Promise<void> {
+    if (isLocalMode()) {
+      return localEquipmentApi.delete(id);
+    }
+
     const { error } = await supabase
       .from('equipment')
       .delete()
@@ -157,6 +184,10 @@ export const equipmentApi = {
 export const inspectionsApi = {
   // Alle Prüfungen abrufen
   async getAll(): Promise<Inspection[]> {
+    if (isLocalMode()) {
+      return localInspectionsApi.getAll();
+    }
+
     const { data, error } = await supabase
       .from('inspections')
       .select('*')
@@ -185,6 +216,10 @@ export const inspectionsApi = {
 
   // Einzelne Prüfung abrufen
   async getById(id: string): Promise<Inspection | null> {
+    if (isLocalMode()) {
+      return localInspectionsApi.getById(id);
+    }
+
     const { data, error } = await supabase
       .from('inspections')
       .select('*')
@@ -214,6 +249,10 @@ export const inspectionsApi = {
 
   // Neue Prüfung erstellen
   async create(inspection: Omit<Inspection, 'id'>): Promise<Inspection> {
+    if (isLocalMode()) {
+      return localInspectionsApi.create(inspection);
+    }
+
     const { data, error } = await supabase
       .from('inspections')
       .insert({
@@ -255,6 +294,10 @@ export const inspectionsApi = {
 
   // Prüfung aktualisieren
   async update(id: string, inspection: Partial<Inspection>): Promise<Inspection> {
+    if (isLocalMode()) {
+      return localInspectionsApi.update(id, inspection);
+    }
+
     const { data, error } = await supabase
       .from('inspections')
       .update({
@@ -298,6 +341,10 @@ export const inspectionsApi = {
 
   // Prüfung löschen
   async delete(id: string): Promise<void> {
+    if (isLocalMode()) {
+      return localInspectionsApi.delete(id);
+    }
+
     const { error } = await supabase
       .from('inspections')
       .delete()
