@@ -9,9 +9,11 @@ const localStorageMock = {
   removeItem: jest.fn(),
   clear: jest.fn(),
 };
-global.localStorage = localStorageMock as any;
+Object.defineProperty(window, 'localStorage', {
+  value: localStorageMock
+});
 
-// Mock für Supabase
+// Mock für Supabase mit besserer Typisierung
 jest.mock('./lib/supabase', () => ({
   supabase: {
     from: jest.fn(() => ({
@@ -19,8 +21,19 @@ jest.mock('./lib/supabase', () => ({
         order: jest.fn(() => Promise.resolve({ data: [], error: null }))
       }))
     }))
-  }
+  },
+  testSupabaseConnection: jest.fn(() => Promise.resolve({ success: true, error: null }))
 }));
+
+// Mock für console.log um Debug-Output zu reduzieren
+const originalConsoleLog = console.log;
+beforeAll(() => {
+  console.log = jest.fn();
+});
+
+afterAll(() => {
+  console.log = originalConsoleLog;
+});
 
 test('renders LA OLA Technik-Doku', () => {
   render(<App />);

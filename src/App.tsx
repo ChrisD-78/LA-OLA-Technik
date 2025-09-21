@@ -20,6 +20,7 @@ import { Equipment, Inspection } from './types';
 import { mockEquipment, mockInspections } from './data/mockData';
 import { v4 as uuidv4 } from 'uuid';
 import { equipmentApi, inspectionsApi } from './lib/api';
+import { testSupabaseConnection } from './lib/supabase';
 
 // Login Component
 const LoginPage = ({ onLogin }: { onLogin: () => void }) => {
@@ -1757,18 +1758,34 @@ function App() {
         setIsLoading(true);
         setError(null);
         
+        // Debug: Teste Supabase-Verbindung zuerst
+        console.log('Testing Supabase connection...');
+        const connectionTest = await testSupabaseConnection();
+        console.log('Connection test result:', connectionTest);
+        
+        if (!connectionTest.success) {
+          throw new Error(`Supabase connection failed: ${connectionTest.error}`);
+        }
+        
         // Parallel Equipment und Inspections laden
+        console.log('Loading data from Supabase...');
         const [equipmentData, inspectionsData] = await Promise.all([
           equipmentApi.getAll(),
           inspectionsApi.getAll()
         ]);
         
+        console.log('Data loaded successfully:', {
+          equipmentCount: equipmentData.length,
+          inspectionsCount: inspectionsData.length
+        });
+        
         setEquipment(equipmentData);
         setInspections(inspectionsData);
-      } catch (err) {
+      } catch (err: any) {
         console.error('Fehler beim Laden der Daten:', err);
-        setError('Fehler beim Laden der Daten. Verwende lokale Beispieldaten.');
+        setError(`Fehler beim Laden der Daten: ${err.message || err}. Verwende lokale Beispieldaten.`);
         // Fallback auf Mock-Daten
+        console.log('Falling back to mock data...');
         setEquipment(mockEquipment);
         setInspections(mockInspections);
       } finally {
