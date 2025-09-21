@@ -772,21 +772,21 @@ const InspectionList = ({ inspections, equipment, onDelete, onAddInspection, onE
       </div>
 
       {/* Tabelle mit allen Prüfungen */}
-      <div className="card-modern max-w-[65%] mx-auto">
+      <div className="card-modern max-w-[91%] mx-auto">
         {/* Fixer Header */}
         <div className="bg-gray-50 border-b-2 border-gray-300">
           <table className="table-modern w-full table-fixed">
             <colgroup>
-              <col className="w-[10%]" />
+              <col className="w-[9%]" />
+              <col className="w-[15%]" />
+              <col className="w-[7%]" />
+              <col className="w-[8%]" />
+              <col className="w-[7%]" />
+              <col className="w-[6%]" />
+              <col className="w-[6%]" />
+              <col className="w-[7%]" />
+              <col className="w-[7%]" />
               <col className="w-[16%]" />
-              <col className="w-[8%]" />
-              <col className="w-[8%]" />
-              <col className="w-[8%]" />
-              <col className="w-[6%]" />
-              <col className="w-[6%]" />
-              <col className="w-[8%]" />
-              <col className="w-[8%]" />
-              <col className="w-[12%]" />
             </colgroup>
             <thead>
               <tr>
@@ -809,16 +809,16 @@ const InspectionList = ({ inspections, equipment, onDelete, onAddInspection, onE
         <div style={{ height: '400px', overflowY: 'auto', overflowX: 'auto' }}>
           <table className="table-modern w-full table-fixed">
             <colgroup>
-              <col className="w-[10%]" />
+              <col className="w-[9%]" />
+              <col className="w-[15%]" />
+              <col className="w-[7%]" />
+              <col className="w-[8%]" />
+              <col className="w-[7%]" />
+              <col className="w-[6%]" />
+              <col className="w-[6%]" />
+              <col className="w-[7%]" />
+              <col className="w-[7%]" />
               <col className="w-[16%]" />
-              <col className="w-[8%]" />
-              <col className="w-[8%]" />
-              <col className="w-[8%]" />
-              <col className="w-[6%]" />
-              <col className="w-[6%]" />
-              <col className="w-[8%]" />
-              <col className="w-[8%]" />
-              <col className="w-[12%]" />
             </colgroup>
             <tbody>
               {filteredInspections.length === 0 ? (
@@ -978,27 +978,27 @@ const InspectionList = ({ inspections, equipment, onDelete, onAddInspection, onE
                         </div>
                       </td>
                       <td className="py-4 px-2">
-                        <div className="flex space-x-1 min-w-0 justify-start">
+                        <div className="flex space-x-2 min-w-0 justify-start">
                           <button
                             onClick={() => handleShowImages(inspection.equipmentId)}
-                            className="btn-modern btn-primary p-1.5 flex-shrink-0 min-w-[32px] h-8"
+                            className="btn-modern btn-primary p-2 flex-shrink-0 min-w-[36px] h-9"
                             title="Gerätebilder anzeigen"
                           >
-                            <Image className="h-3 w-3" />
+                            <Image className="h-4 w-4" />
                           </button>
                           <button
                             onClick={() => onEditInspection(inspection)}
-                            className="btn-modern btn-secondary p-1.5 flex-shrink-0 min-w-[32px] h-8"
+                            className="btn-modern btn-secondary p-2 flex-shrink-0 min-w-[36px] h-9"
                             title="Bearbeiten"
                           >
-                            <Edit className="h-3 w-3" />
+                            <Edit className="h-4 w-4" />
                           </button>
                           <button
                             onClick={() => handleDelete(inspection.id)}
-                            className="btn-modern btn-danger p-1.5 flex-shrink-0 min-w-[32px] h-8"
+                            className="btn-modern btn-danger p-2 flex-shrink-0 min-w-[36px] h-9"
                             title="Löschen"
                           >
-                            <Trash2 className="h-3 w-3" />
+                            <Trash2 className="h-4 w-4" />
                           </button>
                         </div>
                       </td>
