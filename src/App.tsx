@@ -773,8 +773,20 @@ const InspectionList = ({ inspections, equipment, onDelete, onAddInspection, onE
 
       {/* Tabelle mit allen Prüfungen */}
       <div className="card-modern max-w-[98%] mx-auto">
-        {/* Fixer Header */}
-        <div className="bg-gray-50 border-b-2 border-gray-300 overflow-x-auto">
+        {/* Synchronisiert scrollbare Tabelle */}
+        <div 
+          className="overflow-x-auto overflow-y-auto"
+          style={{ height: '500px' }}
+          onScroll={(e) => {
+            // Synchronisiere horizontales Scrolling zwischen Header und Body
+            const target = e.target as HTMLDivElement;
+            const headerTable = target.querySelector('.header-table') as HTMLElement;
+            const bodyTable = target.querySelector('.body-table') as HTMLElement;
+            if (headerTable && bodyTable) {
+              headerTable.style.transform = `translateX(-${target.scrollLeft}px)`;
+            }
+          }}
+        >
           <table className="table-modern min-w-[1400px] w-max">
             <colgroup>
               <col style={{width: '120px'}} />
@@ -788,38 +800,20 @@ const InspectionList = ({ inspections, equipment, onDelete, onAddInspection, onE
               <col style={{width: '100px'}} />
               <col style={{width: '180px'}} />
             </colgroup>
-            <thead>
+            <thead className="bg-gray-50 sticky top-0 z-10">
               <tr>
-                <th className="text-left py-4 px-2 font-semibold text-gray-900">InventarNr</th>
-                <th className="text-left py-4 px-2 font-semibold text-gray-900">Gerät</th>
-                <th className="text-left py-4 px-2 font-semibold text-gray-900">Typ</th>
-                <th className="text-left py-4 px-2 font-semibold text-gray-900">Geplant für</th>
-                <th className="text-left py-4 px-2 font-semibold text-gray-900">Prüfer</th>
-                <th className="text-left py-4 px-2 font-semibold text-gray-900">Intervall</th>
-                <th className="text-left py-4 px-2 font-semibold text-gray-900">Status</th>
-                <th className="text-left py-4 px-2 font-semibold text-gray-900">Ergebnis</th>
-                <th className="text-left py-4 px-2 font-semibold text-gray-900">Dokumente</th>
-                <th className="text-left py-4 px-2 font-semibold text-gray-900">Aktionen</th>
+                <th className="text-left py-4 px-2 font-semibold text-gray-900 border-b-2 border-gray-300">InventarNr</th>
+                <th className="text-left py-4 px-2 font-semibold text-gray-900 border-b-2 border-gray-300">Gerät</th>
+                <th className="text-left py-4 px-2 font-semibold text-gray-900 border-b-2 border-gray-300">Typ</th>
+                <th className="text-left py-4 px-2 font-semibold text-gray-900 border-b-2 border-gray-300">Geplant für</th>
+                <th className="text-left py-4 px-2 font-semibold text-gray-900 border-b-2 border-gray-300">Prüfer</th>
+                <th className="text-left py-4 px-2 font-semibold text-gray-900 border-b-2 border-gray-300">Intervall</th>
+                <th className="text-left py-4 px-2 font-semibold text-gray-900 border-b-2 border-gray-300">Status</th>
+                <th className="text-left py-4 px-2 font-semibold text-gray-900 border-b-2 border-gray-300">Ergebnis</th>
+                <th className="text-left py-4 px-2 font-semibold text-gray-900 border-b-2 border-gray-300">Dokumente</th>
+                <th className="text-left py-4 px-2 font-semibold text-gray-900 border-b-2 border-gray-300">Aktionen</th>
               </tr>
             </thead>
-          </table>
-        </div>
-        
-        {/* Scrollbarer Body */}
-        <div style={{ height: '400px', overflowY: 'auto', overflowX: 'auto' }}>
-          <table className="table-modern min-w-[1400px] w-max">
-            <colgroup>
-              <col style={{width: '120px'}} />
-              <col style={{width: '200px'}} />
-              <col style={{width: '100px'}} />
-              <col style={{width: '120px'}} />
-              <col style={{width: '100px'}} />
-              <col style={{width: '80px'}} />
-              <col style={{width: '80px'}} />
-              <col style={{width: '100px'}} />
-              <col style={{width: '100px'}} />
-              <col style={{width: '180px'}} />
-            </colgroup>
             <tbody>
               {filteredInspections.length === 0 ? (
                 <tr>
