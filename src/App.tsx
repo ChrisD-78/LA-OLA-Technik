@@ -772,22 +772,21 @@ const InspectionList = ({ inspections, equipment, onDelete, onAddInspection, onE
       </div>
 
       {/* Tabelle mit allen Prüfungen */}
-      <div className="card-modern max-w-[98%] mx-auto">
-        {/* Einfache scrollbare Tabelle */}
-        <div className="overflow-auto" style={{ maxHeight: '600px' }}>
-          <table className="table-modern w-full min-w-[1400px]">
-            <thead className="bg-gray-50 sticky top-0 z-10">
+      <div className="card-modern max-w-[98%] mx-auto overflow-x-auto">
+        <div style={{ minWidth: '1400px' }}>
+          <table className="table-modern w-full">
+            <thead className="bg-gray-50">
               <tr>
-                <th className="text-left py-4 px-4 font-semibold text-gray-900 border-b-2 border-gray-300 min-w-[120px]">InventarNr</th>
-                <th className="text-left py-4 px-4 font-semibold text-gray-900 border-b-2 border-gray-300 min-w-[200px]">Gerät</th>
-                <th className="text-left py-4 px-4 font-semibold text-gray-900 border-b-2 border-gray-300 min-w-[100px]">Typ</th>
-                <th className="text-left py-4 px-4 font-semibold text-gray-900 border-b-2 border-gray-300 min-w-[120px]">Geplant für</th>
-                <th className="text-left py-4 px-4 font-semibold text-gray-900 border-b-2 border-gray-300 min-w-[100px]">Prüfer</th>
-                <th className="text-left py-4 px-4 font-semibold text-gray-900 border-b-2 border-gray-300 min-w-[80px]">Intervall</th>
-                <th className="text-left py-4 px-4 font-semibold text-gray-900 border-b-2 border-gray-300 min-w-[80px]">Status</th>
-                <th className="text-left py-4 px-4 font-semibold text-gray-900 border-b-2 border-gray-300 min-w-[100px]">Ergebnis</th>
-                <th className="text-left py-4 px-4 font-semibold text-gray-900 border-b-2 border-gray-300 min-w-[100px]">Dokumente</th>
-                <th className="text-left py-4 px-4 font-semibold text-gray-900 border-b-2 border-gray-300 min-w-[180px]">Aktionen</th>
+                <th className="text-left py-4 px-2 font-semibold text-gray-900">InventarNr</th>
+                <th className="text-left py-4 px-2 font-semibold text-gray-900">Gerät</th>
+                <th className="text-left py-4 px-2 font-semibold text-gray-900">Typ</th>
+                <th className="text-left py-4 px-2 font-semibold text-gray-900">Geplant für</th>
+                <th className="text-left py-4 px-2 font-semibold text-gray-900">Prüfer</th>
+                <th className="text-left py-4 px-2 font-semibold text-gray-900">Intervall</th>
+                <th className="text-left py-4 px-2 font-semibold text-gray-900">Status</th>
+                <th className="text-left py-4 px-2 font-semibold text-gray-900">Ergebnis</th>
+                <th className="text-left py-4 px-2 font-semibold text-gray-900">Dokumente</th>
+                <th className="text-left py-4 px-2 font-semibold text-gray-900">Aktionen</th>
               </tr>
             </thead>
             <tbody>
