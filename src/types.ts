@@ -1,7 +1,7 @@
 export interface Equipment {
   id: string;
   name: string;
-  type: string;
+  type: 'Wartung' | 'Messgeräte' | 'Technische Prüfungen' | 'Elektrische Prüfungen' | 'Lüftungsanlagen' | string;
   location: string;
   manufacturer: string;
   model: string;

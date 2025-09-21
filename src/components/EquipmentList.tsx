@@ -55,7 +55,7 @@ const EquipmentList: React.FC<EquipmentListProps> = ({ equipment, onDelete }) =>
     }
   };
 
-  const uniqueTypes = Array.from(new Set(equipment.map(eq => eq.type)));
+  const standardTypes = ['Wartung', 'Messgeräte', 'Technische Prüfungen', 'Elektrische Prüfungen', 'Lüftungsanlagen'];
 
   return (
     <div>
@@ -100,16 +100,31 @@ const EquipmentList: React.FC<EquipmentListProps> = ({ equipment, onDelete }) =>
           
           <div className="form-group">
             <label className="form-label">Typ</label>
-            <select
-              className="form-select"
-              value={typeFilter}
-              onChange={(e) => setTypeFilter(e.target.value)}
-            >
-              <option value="all">Alle Typen</option>
-              {uniqueTypes.map(type => (
-                <option key={type} value={type}>{type}</option>
+            <div className="flex flex-wrap justify-center gap-6">
+              <button
+                className={`btn-modern ${
+                  typeFilter === 'all' 
+                    ? 'btn-primary' 
+                    : 'btn-secondary'
+                }`}
+                onClick={() => setTypeFilter('all')}
+              >
+                Alle Typen
+              </button>
+              {standardTypes.map(type => (
+                <button
+                  key={type}
+                  className={`btn-modern ${
+                    typeFilter === type 
+                      ? 'btn-primary' 
+                      : 'btn-secondary'
+                  }`}
+                  onClick={() => setTypeFilter(type)}
+                >
+                  {type}
+                </button>
               ))}
-            </select>
+            </div>
           </div>
           
           <div className="form-group">

@@ -146,23 +146,22 @@ const EquipmentForm: React.FC<EquipmentFormProps> = ({ equipment, onSave }) => {
 
             <div className="form-group">
               <label className="form-label">Typ *</label>
-              <select
-                className={`form-select ${errors.type ? 'border-red-500' : ''}`}
-                value={formData.type || ''}
-                onChange={(e) => handleInputChange('type', e.target.value)}
-              >
-                <option value="">Typ auswählen</option>
-                <option value="Fertigungsmaschine">Fertigungsmaschine</option>
-                <option value="Schweißgerät">Schweißgerät</option>
-                <option value="Hebegerät">Hebegerät</option>
-                <option value="Kompressor">Kompressor</option>
-                <option value="Laserschneidmaschine">Laserschneidmaschine</option>
-                <option value="Drehmaschine">Drehmaschine</option>
-                <option value="Bohrmaschine">Bohrmaschine</option>
-                <option value="Messgerät">Messgerät</option>
-                <option value="Werkzeug">Werkzeug</option>
-                <option value="Sonstiges">Sonstiges</option>
-              </select>
+              <div className="flex flex-wrap justify-center gap-6">
+                {['Wartung', 'Messgeräte', 'Technische Prüfungen', 'Elektrische Prüfungen', 'Lüftungsanlagen'].map(type => (
+                  <button
+                    key={type}
+                    type="button"
+                    className={`btn-modern ${
+                      formData.type === type 
+                        ? 'btn-primary' 
+                        : 'btn-secondary'
+                    } ${errors.type ? 'ring-2 ring-red-500' : ''}`}
+                    onClick={() => handleInputChange('type', type)}
+                  >
+                    {type}
+                  </button>
+                ))}
+              </div>
               {errors.type && <p className="text-red-500 text-sm mt-1">{errors.type}</p>}
             </div>
 

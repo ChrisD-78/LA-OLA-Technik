@@ -244,9 +244,9 @@ const CsvImport = ({ onEquipmentImport }: {
 
   const downloadTemplate = () => {
     const template = `Name,Type,Location,Manufacturer,Model,SerialNumber,PurchaseDate,Notes
-Wasseraufbereitungsanlage,Wasseraufbereitung,Technikraum Hauptgebäude,AquaTech GmbH,WT-2000,AT-2023-001,2023-01-15,Hauptanlage für Wasseraufbereitung
-Chlor-Dosieranlage,Chemie-Dosierung,Chemieraum Untergeschoss,ChemDos Systems,CD-500,CDS-2022-089,2022-08-20,Automatische Chlordosierung
-Umwälzpumpe,Pumptechnik,Schwimmbecken 1,Technikschacht,Grundfos,UP 100,GF-2021-456,2021-05-12,Hauptumwälzpumpe`;
+CNC-Fräsmaschine,Technische Prüfungen,Halle A,Haas Automation,VF-2,HAAS-2023-001,2023-01-15,Hauptmaschine für Aluminium-Bearbeitung
+Schweißgerät,Elektrische Prüfungen,Halle B,Fronius,TransPuls Synergic 5000,FRON-2022-045,2022-06-20,Für MIG/MAG-Schweißungen
+Digitales Multimeter,Messgeräte,Labor,Fluke,87V,FLUKE-2023-012,2023-05-10,Präzisionsmessgerät für elektrische Messungen`;
     
     const blob = new Blob([template], { type: 'text/csv' });
     const url = window.URL.createObjectURL(blob);
@@ -587,6 +587,7 @@ const InspectionList = ({ inspections, equipment, onDelete, onAddInspection, onE
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [typeFilter, setTypeFilter] = useState<string>('all');
   
   // Alle Geräte, die keine Prüfungen haben
   const equipmentWithoutInspections = equipment.filter(eq => 
@@ -601,19 +602,10 @@ const InspectionList = ({ inspections, equipment, onDelete, onAddInspection, onE
                          insp.equipmentId.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          insp.inspector.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === 'all' || insp.status === statusFilter;
-    return matchesSearch && matchesStatus;
+    const matchesType = typeFilter === 'all' || insp.type === typeFilter;
+    return matchesSearch && matchesStatus && matchesType;
   });
 
-  const getStatusBadge = (inspection: Inspection) => {
-    const today = new Date();
-    if (inspection.status === 'completed') {
-      return <span className="badge-modern badge-success">Abgeschlossen</span>;
-    }
-    if (new Date(inspection.scheduledDate) < today) {
-      return <span className="badge-modern badge-danger">Überfällig</span>;
-    }
-    return <span className="badge-modern badge-warning">Anstehend</span>;
-  };
 
   const getTypeBadge = (type: string) => {
     const typeMap = {
@@ -647,7 +639,7 @@ const InspectionList = ({ inspections, equipment, onDelete, onAddInspection, onE
           {/* Deploy-Trigger: Kleine Änderung für Netlify-Update */}
         </div>
 
-        <div className="grid-modern grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div className="grid-modern grid-cols-1 md:grid-cols-2 gap-4 mb-6">
           <div className="form-group-modern">
             <label className="form-label-modern">Suche</label>
             <input
@@ -672,25 +664,47 @@ const InspectionList = ({ inspections, equipment, onDelete, onAddInspection, onE
               <option value="cancelled">Abgebrochen</option>
             </select>
           </div>
-          
-          <div className="form-group-modern">
-            <label className="form-label-modern">&nbsp;</label>
+        </div>
+
+        {/* Typ-Filter Buttons */}
+        <div className="mb-6">
+          <label className="form-label-modern">Typ</label>
+          <div className="flex flex-wrap justify-center gap-6">
             <button
-              className="btn-modern btn-secondary w-full"
-              onClick={() => {
-                setSearchTerm('');
-                setStatusFilter('all');
-              }}
+              className={`btn-modern ${
+                typeFilter === 'all' 
+                  ? 'btn-primary' 
+                  : 'btn-secondary'
+              }`}
+              onClick={() => setTypeFilter('all')}
             >
-              Filter zurücksetzen
+              Alle Typen
             </button>
+            {['measurement_devices', 'maintenance', 'technical_inspection', 'electrical_inspection', 'ventilation_systems'].map(type => (
+              <button
+                key={type}
+                className={`btn-modern ${
+                  typeFilter === type 
+                    ? 'btn-primary' 
+                    : 'btn-secondary'
+                }`}
+                onClick={() => setTypeFilter(type)}
+              >
+                {type === 'measurement_devices' ? 'Messgeräte' :
+                 type === 'maintenance' ? 'Wartung' :
+                 type === 'technical_inspection' ? 'Technische Prüfungen' :
+                 type === 'electrical_inspection' ? 'Elektrische Prüfungen' :
+                 'Lüftungsanlagen'}
+              </button>
+            ))}
           </div>
         </div>
       </div>
 
-die sei      {/* Tabelle mit allen Prüfungen */}
-      <div className="card-modern overflow-hidden max-w-[65%] mx-auto">
-        <div className="overflow-x-auto">
+      {/* Tabelle mit allen Prüfungen */}
+      <div className="card-modern max-w-[65%] mx-auto">
+        {/* Fixer Header */}
+        <div className="bg-gray-50 border-b-2 border-gray-300">
           <table className="table-modern w-full table-fixed">
             <colgroup>
               <col className="w-[10%]" />
@@ -706,18 +720,36 @@ die sei      {/* Tabelle mit allen Prüfungen */}
             </colgroup>
             <thead>
               <tr>
-                <th className="text-left py-4 px-2">InventarNr</th>
-                <th className="text-left py-4 px-2">Gerät</th>
-                <th className="text-left py-4 px-2">Typ</th>
-                <th className="text-left py-4 px-2">Geplant für</th>
-                <th className="text-left py-4 px-2">Prüfer</th>
-                <th className="text-left py-4 px-2">Intervall</th>
-                <th className="text-left py-4 px-2">Status</th>
-                <th className="text-left py-4 px-2">Ergebnis</th>
-                <th className="text-left py-4 px-2">Dokumente</th>
-                <th className="text-left py-4 px-2">Aktionen</th>
+                <th className="text-left py-4 px-2 font-semibold text-gray-900">InventarNr</th>
+                <th className="text-left py-4 px-2 font-semibold text-gray-900">Gerät</th>
+                <th className="text-left py-4 px-2 font-semibold text-gray-900">Typ</th>
+                <th className="text-left py-4 px-2 font-semibold text-gray-900">Geplant für</th>
+                <th className="text-left py-4 px-2 font-semibold text-gray-900">Prüfer</th>
+                <th className="text-left py-4 px-2 font-semibold text-gray-900">Intervall</th>
+                <th className="text-left py-4 px-2 font-semibold text-gray-900">Status</th>
+                <th className="text-left py-4 px-2 font-semibold text-gray-900">Ergebnis</th>
+                <th className="text-left py-4 px-2 font-semibold text-gray-900">Dokumente</th>
+                <th className="text-left py-4 px-2 font-semibold text-gray-900">Aktionen</th>
               </tr>
             </thead>
+          </table>
+        </div>
+        
+        {/* Scrollbarer Body */}
+        <div style={{ height: '400px', overflowY: 'auto', overflowX: 'auto' }}>
+          <table className="table-modern w-full table-fixed">
+            <colgroup>
+              <col className="w-[10%]" />
+              <col className="w-[16%]" />
+              <col className="w-[8%]" />
+              <col className="w-[8%]" />
+              <col className="w-[8%]" />
+              <col className="w-[6%]" />
+              <col className="w-[6%]" />
+              <col className="w-[8%]" />
+              <col className="w-[8%]" />
+              <col className="w-[12%]" />
+            </colgroup>
             <tbody>
               {filteredInspections.length === 0 ? (
                 <tr>
@@ -774,40 +806,104 @@ die sei      {/* Tabelle mit allen Prüfungen */}
                         </div>
                       </td>
                       <td className="py-4 px-2">
-                        <div className="min-w-0">
-                          <div style={{ transform: 'scale(0.5)', transformOrigin: 'left center' }}>
-                            {getStatusBadge(inspection)}
-                          </div>
+                        <div className="flex justify-center">
+                          {(() => {
+                            const today = new Date();
+                            if (inspection.status === 'completed') {
+                              return (
+                                <div 
+                                  className="w-24 h-24 rounded-full" 
+                                  style={{ backgroundColor: '#10b981', border: '4px solid #059669' }}
+                                  title="Abgeschlossen"
+                                ></div>
+                              );
+                            }
+                            if (inspection.status === 'overdue' || new Date(inspection.scheduledDate) < today) {
+                              return (
+                                <div 
+                                  className="w-24 h-24 rounded-full" 
+                                  style={{ backgroundColor: '#ef4444', border: '4px solid #dc2626' }}
+                                  title="Überfällig"
+                                ></div>
+                              );
+                            }
+                            return (
+                              <div 
+                                className="w-24 h-24 rounded-full" 
+                                style={{ backgroundColor: '#eab308', border: '4px solid #d97706' }}
+                                title="Anstehend"
+                              ></div>
+                            );
+                          })()}
                         </div>
                       </td>
                       <td className="py-4 px-2">
-                        <div className="min-w-0">
-                          {inspection.result ? (
-                            <div style={{ transform: 'scale(0.5)', transformOrigin: 'left center' }}>
-                              <span className={`badge-modern ${
-                                inspection.result === 'passed' ? 'badge-success' :
-                                inspection.result === 'failed' ? 'badge-danger' :
-                                'badge-warning'
-                              }`}>
-                                {inspection.result === 'passed' ? 'Bestanden' :
-                                 inspection.result === 'failed' ? 'Nicht bestanden' :
-                                 'Bedingt'}
-                              </span>
-                            </div>
-                          ) : (
-                            <span className="text-gray-400">-</span>
-                          )}
+                        <div className="flex justify-center">
+                          {(() => {
+                            if (!inspection.result) {
+                              return (
+                                <div 
+                                  className="w-24 h-24 rounded-full" 
+                                  style={{ backgroundColor: '#9ca3af', border: '4px solid #6b7280' }}
+                                  title="Noch kein Ergebnis"
+                                ></div>
+                              );
+                            }
+                            if (inspection.result === 'passed') {
+                              return (
+                                <div 
+                                  className="w-24 h-24 rounded-full" 
+                                  style={{ backgroundColor: '#10b981', border: '4px solid #059669' }}
+                                  title="Bestanden"
+                                ></div>
+                              );
+                            }
+                            if (inspection.result === 'failed') {
+                              return (
+                                <div 
+                                  className="w-24 h-24 rounded-full" 
+                                  style={{ backgroundColor: '#ef4444', border: '4px solid #dc2626' }}
+                                  title="Nicht bestanden"
+                                ></div>
+                              );
+                            }
+                            return (
+                              <div 
+                                className="w-24 h-24 rounded-full" 
+                                style={{ backgroundColor: '#eab308', border: '4px solid #d97706' }}
+                                title="Bedingt"
+                              ></div>
+                            );
+                          })()}
                         </div>
                       </td>
                       <td className="py-4 px-2">
-                        <div className="min-w-0">
+                        <div className="flex justify-center">
                           {inspection.documents && inspection.documents.length > 0 ? (
-                            <div className="flex items-center space-x-1">
-                              <FileText className="h-4 w-4 text-red-600" />
+                            <button
+                              onClick={() => {
+                                // Öffne das erste Dokument
+                                const doc = inspection.documents![0];
+                                if (doc.url) {
+                                  // Versuche das Dokument in einem neuen Tab zu öffnen
+                                  window.open(doc.url, '_blank');
+                                } else {
+                                  alert(`Dokument: ${doc.filename}\nBeschreibung: ${doc.description || 'Keine Beschreibung verfügbar'}`);
+                                }
+                              }}
+                              className="flex items-center space-x-2 px-3 py-2 bg-blue-100 hover:bg-blue-200 text-blue-800 rounded-lg transition-colors"
+                              title={`${inspection.documents.length} Dokument(e) anzeigen`}
+                            >
+                              <FileText className="h-5 w-5" />
                               <span className="text-sm font-medium">{inspection.documents.length}</span>
-                            </div>
+                            </button>
                           ) : (
-                            <span className="text-gray-400">-</span>
+                            <div 
+                              className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center"
+                              title="Keine Dokumente"
+                            >
+                              <span className="text-gray-500 text-xs">-</span>
+                            </div>
                           )}
                         </div>
                       </td>
@@ -985,23 +1081,31 @@ const EquipmentList = ({ equipment, onDelete, onAddNew }: {
           
           <div className="form-group-modern">
             <label className="form-label-modern">Typ</label>
-            <select
-              className="form-select-modern"
-              value={typeFilter}
-              onChange={(e) => setTypeFilter(e.target.value)}
-            >
-              <option value="all">Alle Typen</option>
-              <option value="Wasseraufbereitung">Wasseraufbereitung</option>
-              <option value="Chemie-Dosierung">Chemie-Dosierung</option>
-              <option value="Pumptechnik">Pumptechnik</option>
-              <option value="Filtration">Filtration</option>
-              <option value="Lüftungstechnik">Lüftungstechnik</option>
-              <option value="Heiztechnik">Heiztechnik</option>
-              <option value="Elektrotechnik">Elektrotechnik</option>
-              <option value="Sanitär">Sanitär</option>
-              <option value="Sicherheit">Sicherheit</option>
-              <option value="Sonstiges">Sonstiges</option>
-            </select>
+            <div className="flex flex-wrap justify-center gap-6">
+              <button
+                className={`btn-modern ${
+                  typeFilter === 'all' 
+                    ? 'btn-primary' 
+                    : 'btn-secondary'
+                }`}
+                onClick={() => setTypeFilter('all')}
+              >
+                Alle Typen
+              </button>
+              {['Wartung', 'Messgeräte', 'Technische Prüfungen', 'Elektrische Prüfungen', 'Lüftungsanlagen'].map(type => (
+                <button
+                  key={type}
+                  className={`btn-modern ${
+                    typeFilter === type 
+                      ? 'btn-primary' 
+                      : 'btn-secondary'
+                  }`}
+                  onClick={() => setTypeFilter(type)}
+                >
+                  {type}
+                </button>
+              ))}
+            </div>
           </div>
           
           <div className="form-group-modern">
@@ -1077,19 +1181,6 @@ const EquipmentList = ({ equipment, onDelete, onAddNew }: {
                   </div>
                 </div>
                 
-                <div className="card-actions">
-                  <button
-                    onClick={() => {
-                      if (window.confirm(`Sind Sie sicher, dass Sie "${eq.name}" löschen möchten? Alle zugehörigen Prüfungen werden ebenfalls gelöscht.`)) {
-                        onDelete(eq.id);
-                      }
-                    }}
-                    className="btn-modern btn-danger w-full"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                    Gerät löschen
-                  </button>
-                </div>
               </div>
             ))
           )}
@@ -1230,7 +1321,7 @@ const EquipmentForm = ({ onSave, onCancel }: {
               className={`form-input-modern ${errors.name ? 'border-red-500' : ''}`}
               value={formData.name || ''}
               onChange={(e) => handleInputChange('name', e.target.value)}
-              placeholder="z.B. Wasseraufbereitungsanlage"
+              placeholder="z.B. CNC-Fräsmaschine"
             />
             {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
           </div>
