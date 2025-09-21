@@ -772,7 +772,7 @@ const InspectionList = ({ inspections, equipment, onDelete, onAddInspection, onE
       </div>
 
       {/* Tabelle mit allen Prüfungen */}
-      <div className="card-modern max-w-[91%] mx-auto">
+      <div className="card-modern max-w-[98%] mx-auto">
         {/* Fixer Header */}
         <div className="bg-gray-50 border-b-2 border-gray-300">
           <table className="table-modern w-full table-fixed">
@@ -2086,7 +2086,7 @@ function App() {
           </div>
         </nav>
 
-        <main className="container mx-auto px-6 py-8">
+        <main className="container mx-auto px-2 py-8">
           {currentView === 'dashboard' && (
             <Dashboard 
               equipment={equipment} 

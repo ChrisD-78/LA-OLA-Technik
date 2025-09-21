@@ -223,7 +223,7 @@ const ElektrischePruefungen: React.FC<ElektrischePruefungenProps> = ({ inspectio
       </div>
 
       {/* Prüfungen Table */}
-      <div className="card-modern overflow-hidden max-w-[91%] mx-auto">
+      <div className="card-modern overflow-hidden max-w-[98%] mx-auto">
         <div className="overflow-x-auto">
           <table className="table-modern w-full">
             <thead>
