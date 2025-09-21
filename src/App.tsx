@@ -1758,8 +1758,29 @@ function App() {
         setIsLoading(true);
         setError(null);
         
-        // Debug: Teste Supabase-Verbindung zuerst
-        console.log('Testing Supabase connection...');
+        // Prüfe ob wir im lokalen Mock-Modus sind
+        const supabaseUrl = process.env.REACT_APP_SUPABASE_URL || 'https://dummy.supabase.co';
+        const isLocalMode = supabaseUrl.includes('dummy');
+        
+        if (isLocalMode) {
+          console.log('🏠 Lokaler Modus erkannt - verwende Mock-Daten direkt');
+          console.log('📝 Lade lokale Beispieldaten...');
+          
+          // Simuliere kurze Ladezeit für realistische UX
+          await new Promise(resolve => setTimeout(resolve, 500));
+          
+          setEquipment(mockEquipment);
+          setInspections(mockInspections);
+          
+          console.log('✅ Mock-Daten geladen:', {
+            equipmentCount: mockEquipment.length,
+            inspectionsCount: mockInspections.length
+          });
+          return;
+        }
+        
+        // Nur wenn echte Supabase-URL konfiguriert ist
+        console.log('🗄️ Versuche Supabase-Verbindung...');
         const connectionTest = await testSupabaseConnection();
         console.log('Connection test result:', connectionTest);
         

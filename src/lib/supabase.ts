@@ -1,15 +1,21 @@
 import { createClient } from '@supabase/supabase-js'
 
-// Supabase-Konfiguration für LA OLA Technik-Doku
-const supabaseUrl = process.env.REACT_APP_SUPABASE_URL || 'https://toeskuoixedornrqrvzm.supabase.co'
-const supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRvZXNrdW9peGVkb3JuZ3FydnptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY5MjMwMzgsImV4cCI6MjA3MjQ5OTAzOH0.YOxx9UwFBwziOI81SJnIAeZI4wM71wkF3Y7e950CMlg'
+// ⚠️ HINWEIS: Die ursprüngliche Supabase-Instanz existiert nicht mehr!
+// Die App läuft jetzt im lokalen Modus mit Mock-Daten
 
-// Debug-Informationen für Netlify
-console.log('Supabase Configuration:', {
+// Supabase-Konfiguration für LA OLA Technik-Doku
+const supabaseUrl = process.env.REACT_APP_SUPABASE_URL || 'https://dummy.supabase.co'
+const supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY || 'dummy-key'
+
+// Debug-Informationen
+console.log('🔧 LA OLA Technik-Doku - Konfiguration:', {
+  mode: supabaseUrl.includes('dummy') ? 'LOCAL_MOCK_DATA' : 'SUPABASE_CONNECTED',
   url: supabaseUrl,
   hasAnonKey: !!supabaseAnonKey,
-  anonKeyPrefix: supabaseAnonKey ? supabaseAnonKey.substring(0, 20) + '...' : 'undefined',
-  environment: process.env.NODE_ENV
+  environment: process.env.NODE_ENV,
+  message: supabaseUrl.includes('dummy') ? 
+    '📝 App läuft mit lokalen Mock-Daten (Supabase nicht konfiguriert)' : 
+    '🗄️ App versucht Supabase-Verbindung'
 });
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
@@ -17,16 +23,45 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 // Test der Supabase-Verbindung
 export const testSupabaseConnection = async () => {
   try {
+    console.log('Testing Supabase connection with URL:', supabaseUrl);
+    
+    // Einfacher Ping-Test
     const { data, error } = await supabase
       .from('equipment')
-      .select('count(*)', { count: 'exact' })
+      .select('id')
       .limit(1);
     
-    console.log('Supabase Connection Test:', { data, error });
-    return { success: !error, error };
-  } catch (err) {
-    console.error('Supabase Connection Test Failed:', err);
-    return { success: false, error: err };
+    console.log('Supabase Connection Test Result:', { 
+      success: !error, 
+      dataReceived: !!data,
+      dataLength: data?.length || 0,
+      error: error ? {
+        message: error.message,
+        details: error.details,
+        hint: error.hint,
+        code: error.code
+      } : null
+    });
+    
+    if (error) {
+      return { 
+        success: false, 
+        error: `${error.message} (Code: ${error.code})${error.hint ? ` - Hint: ${error.hint}` : ''}`
+      };
+    }
+    
+    return { success: true, error: null };
+  } catch (err: any) {
+    console.error('Supabase Connection Test Exception:', {
+      message: err?.message || 'Unknown error',
+      name: err?.name,
+      stack: err?.stack
+    });
+    
+    return { 
+      success: false, 
+      error: err?.message || 'Network or configuration error'
+    };
   }
 };
 

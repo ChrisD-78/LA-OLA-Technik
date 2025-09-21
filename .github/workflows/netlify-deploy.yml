@@ -28,25 +28,16 @@ jobs:
         REACT_APP_SUPABASE_URL: ${{ secrets.REACT_APP_SUPABASE_URL || 'https://toeskuoixedornrqrvzm.supabase.co' }}
         REACT_APP_SUPABASE_ANON_KEY: ${{ secrets.REACT_APP_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRvZXNrdW9peGVkb3JuZ3FydnptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY5MjMwMzgsImV4cCI6MjA3MjQ5OTAzOH0.YOxx9UwFBwziOI81SJnIAeZI4wM71wkF3Y7e950CMlg' }}
         
-    - name: Deploy to Netlify (if secrets are available)
-      if: ${{ secrets.NETLIFY_AUTH_TOKEN && secrets.NETLIFY_SITE_ID }}
-      uses: nwtgck/actions-netlify@v3.0
-      with:
-        publish-dir: './build'
-        production-branch: main
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        deploy-message: "🚀 Deploy from GitHub Actions - ${{ github.sha }}"
-        enable-pull-request-comment: false
-        enable-commit-comment: true
-      env:
-        NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-        NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-      timeout-minutes: 10
-      
-    - name: Upload build for manual deployment
-      if: ${{ !secrets.NETLIFY_AUTH_TOKEN || !secrets.NETLIFY_SITE_ID }}
+    - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
         name: netlify-build-${{ github.sha }}
         path: build/
         retention-days: 30
+        
+    - name: Deploy info
+      run: |
+        echo "✅ Build successful!"
+        echo "📦 Build artifacts uploaded"
+        echo "🚀 Ready for deployment"
+        echo "💡 Netlify will auto-deploy from GitHub integration"

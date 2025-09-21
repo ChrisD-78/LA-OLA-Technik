@@ -4,9 +4,13 @@
 
 [build.environment]
   NODE_VERSION = "18"
-  # Supabase-Konfiguration für LA OLA Technik-Doku
-  REACT_APP_SUPABASE_URL = "https://toeskuoixedornrqrvzm.supabase.co"
-  REACT_APP_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRvZXNrdW9peGVkb3JuZ3FydnptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY5MjMwMzgsImV4cCI6MjA3MjQ5OTAzOH0.YOxx9UwFBwziOI81SJnIAeZI4wM71wkF3Y7e950CMlg"
+  # ⚠️ Supabase-Instanz existiert nicht mehr - App läuft mit lokalen Mock-Daten
+  # REACT_APP_SUPABASE_URL = "https://ihr-neues-supabase-projekt.supabase.co"
+  # REACT_APP_SUPABASE_ANON_KEY = "ihr-neuer-anon-key"
+  
+  # Dummy-Werte für lokalen Modus (App erkennt diese und verwendet Mock-Daten)
+  REACT_APP_SUPABASE_URL = "https://dummy.supabase.co"
+  REACT_APP_SUPABASE_ANON_KEY = "dummy-key"
 
 [[redirects]]
   from = "/*"
