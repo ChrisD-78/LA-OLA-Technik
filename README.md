@@ -221,3 +221,5 @@ Bei Fragen oder Problemen wenden Sie sich an das Technik-Team.
 ---
 
 **🏊‍♂️ LA OLA - Wo Technik auf Spaß trifft! ✨**
+
+*Letzte Aktualisierung: Bilder-Anzeige in Prüfungs-Übersicht hinzugefügt (v1.1)*
