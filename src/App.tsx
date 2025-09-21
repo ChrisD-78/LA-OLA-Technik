@@ -775,17 +775,8 @@ const InspectionList = ({ inspections, equipment, onDelete, onAddInspection, onE
       <div className="card-modern max-w-[98%] mx-auto">
         {/* Synchronisiert scrollbare Tabelle */}
         <div 
-          className="overflow-x-auto overflow-y-auto"
-          style={{ height: '500px' }}
-          onScroll={(e) => {
-            // Synchronisiere horizontales Scrolling zwischen Header und Body
-            const target = e.target as HTMLDivElement;
-            const headerTable = target.querySelector('.header-table') as HTMLElement;
-            const bodyTable = target.querySelector('.body-table') as HTMLElement;
-            if (headerTable && bodyTable) {
-              headerTable.style.transform = `translateX(-${target.scrollLeft}px)`;
-            }
-          }}
+          className="overflow-auto"
+          style={{ height: '600px', maxHeight: '70vh' }}
         >
           <table className="table-modern min-w-[1400px] w-max">
             <colgroup>
