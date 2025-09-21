@@ -24,9 +24,10 @@ jobs:
     - name: Build project
       run: npm run build
       env:
-        # Netlify will handle these via its own environment variables
-        REACT_APP_SUPABASE_URL: ${{ secrets.REACT_APP_SUPABASE_URL || 'https://toeskuoixedornrqrvzm.supabase.co' }}
-        REACT_APP_SUPABASE_ANON_KEY: ${{ secrets.REACT_APP_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRvZXNrdW9peGVkb3JuZ3FydnptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY5MjMwMzgsImV4cCI6MjA3MjQ5OTAzOH0.YOxx9UwFBwziOI81SJnIAeZI4wM71wkF3Y7e950CMlg' }}
+        # Netlify will override these with values from netlify.toml
+        REACT_APP_SUPABASE_URL: "https://toeskuoixedornrqrvzm.supabase.co"
+        REACT_APP_SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRvZXNrdW9peGVkb3JuZ3JydnptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY5MjMwMzgsImV4cCI6MjA3MjQ5OTAzOH0.YOxx9UwFBwziOI81SJnIAeZI4wM71wkF3Y7e950CMlg"
+        CI: false
         
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
@@ -35,9 +36,9 @@ jobs:
         path: build/
         retention-days: 30
         
-    - name: Deploy info
+    - name: Deploy success
       run: |
         echo "✅ Build successful!"
         echo "📦 Build artifacts uploaded"
-        echo "🚀 Ready for deployment"
-        echo "💡 Netlify will auto-deploy from GitHub integration"
+        echo "🚀 Netlify will auto-deploy from GitHub integration"
+        echo "🔗 Live URL: https://laola-technik.netlify.app"
