@@ -222,7 +222,7 @@ const TechnischePruefungen: React.FC<TechnischePruefungenProps> = ({ inspections
 
       {/* Prüfungen Table */}
       <div className="card-modern overflow-hidden max-w-[98%] mx-auto">
-        <div className="overflow-x-auto">
+        <div className="table-container">
           <table className="table-modern min-w-[1300px] w-max">
             <thead>
               <tr>

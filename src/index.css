@@ -323,7 +323,7 @@ body {
   width: auto;
 }
 
-/* Horizontales Scrolling für Tabellen */
+/* Horizontales und Vertikales Scrolling für Tabellen */
 .overflow-x-auto {
   overflow-x: auto !important;
   overflow-y: hidden;
@@ -332,10 +332,35 @@ body {
   white-space: nowrap;
 }
 
-/* Tabellen für horizontales Scrolling optimieren */
+/* Spezielle Regel für table-container - überschreibt overflow-hidden */
+.card-modern .table-container {
+  overflow: auto !important;
+  overflow-x: auto !important;
+  overflow-y: auto !important;
+}
+
+.overflow-auto {
+  overflow: auto !important;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f1f5f9;
+}
+
+.table-container {
+  max-height: 70vh;
+  overflow: auto !important;
+  overflow-x: auto !important;
+  overflow-y: auto !important;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f1f5f9;
+  position: relative;
+}
+
+/* Tabellen für horizontales und vertikales Scrolling optimieren */
 .table-modern {
   table-layout: auto !important;
   width: max-content !important;
+  height: auto !important;
+  max-height: none !important;
 }
 
 .table-modern th,
@@ -359,6 +384,29 @@ body {
 }
 
 .overflow-x-auto::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.overflow-auto::-webkit-scrollbar,
+.table-container::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.overflow-auto::-webkit-scrollbar-track,
+.table-container::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+.overflow-auto::-webkit-scrollbar-thumb,
+.table-container::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.overflow-auto::-webkit-scrollbar-thumb:hover,
+.table-container::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
 }
 

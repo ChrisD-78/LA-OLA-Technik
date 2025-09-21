@@ -201,7 +201,7 @@ const Wartungen: React.FC<WartungenProps> = ({ inspections, equipment, onDelete,
 
       {/* Wartungen Table */}
       <div className="card-modern overflow-hidden max-w-[98%] mx-auto">
-        <div className="overflow-x-auto">
+        <div className="table-container">
           <table className="table-modern min-w-[1200px] w-max">
             <thead>
               <tr>
