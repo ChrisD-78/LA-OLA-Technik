@@ -8,11 +8,13 @@ import {
   Trash2, 
   Calendar,
   User,
-  AlertTriangle
+  AlertTriangle,
+  Image
 } from 'lucide-react';
 import { Equipment, Inspection } from '../types';
 import { format, isBefore } from 'date-fns';
 import { de } from 'date-fns/locale';
+import ImageGalleryModal from './ImageGalleryModal';
 
 interface InspectionListProps {
   inspections: Inspection[];
@@ -24,6 +26,8 @@ const InspectionList: React.FC<InspectionListProps> = ({ inspections, equipment,
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [typeFilter, setTypeFilter] = useState<string>('all');
+  const [selectedEquipment, setSelectedEquipment] = useState<Equipment | null>(null);
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
 
   const filteredInspections = inspections.filter(insp => {
     const equipmentItem = equipment.find(eq => eq.id === insp.equipmentId);
@@ -73,6 +77,19 @@ const InspectionList: React.FC<InspectionListProps> = ({ inspections, equipment,
 
   const getEquipmentById = (id: string) => {
     return equipment.find(eq => eq.id === id);
+  };
+
+  const handleShowImages = (equipmentId: string) => {
+    const equipmentItem = getEquipmentById(equipmentId);
+    if (equipmentItem) {
+      setSelectedEquipment(equipmentItem);
+      setIsImageModalOpen(true);
+    }
+  };
+
+  const handleCloseImageModal = () => {
+    setIsImageModalOpen(false);
+    setSelectedEquipment(null);
   };
 
   return (
@@ -223,6 +240,13 @@ const InspectionList: React.FC<InspectionListProps> = ({ inspections, equipment,
                       </td>
                       <td>
                         <div className="flex space-x-2">
+                          <button
+                            onClick={() => handleShowImages(inspection.equipmentId)}
+                            className="btn btn-primary"
+                            title="Gerätebilder anzeigen"
+                          >
+                            <Image className="h-4 w-4" />
+                          </button>
                           <Link
                             to={`/inspections/edit/${inspection.id}`}
                             className="btn btn-secondary"
@@ -244,6 +268,15 @@ const InspectionList: React.FC<InspectionListProps> = ({ inspections, equipment,
             </table>
           </div>
         </div>
+      )}
+
+      {/* Image Gallery Modal */}
+      {selectedEquipment && (
+        <ImageGalleryModal
+          equipment={selectedEquipment}
+          isOpen={isImageModalOpen}
+          onClose={handleCloseImageModal}
+        />
       )}
     </div>
   );

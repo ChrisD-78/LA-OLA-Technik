@@ -13,8 +13,10 @@ import {
   AlertTriangle,
   XCircle,
   User,
-  Package
+  Package,
+  Image
 } from 'lucide-react';
+import ImageGalleryModal from './ImageGalleryModal';
 import { Inspection, Equipment } from '../types';
 
 interface WartungenProps {
