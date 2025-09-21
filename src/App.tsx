@@ -14,8 +14,10 @@ import {
   Download,
   Lock,
   Eye,
-  EyeOff
+  EyeOff,
+  Image
 } from 'lucide-react';
+import ImageGalleryModal from './components/ImageGalleryModal';
 import { Equipment, Inspection } from './types';
 import { mockEquipment, mockInspections } from './data/mockData';
 import { v4 as uuidv4 } from 'uuid';
@@ -641,6 +643,8 @@ const InspectionList = ({ inspections, equipment, onDelete, onAddInspection, onE
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [typeFilter, setTypeFilter] = useState<string>('all');
+  const [selectedEquipmentForImages, setSelectedEquipmentForImages] = useState<Equipment | null>(null);
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   
   // Alle Geräte, die keine Prüfungen haben
   const equipmentWithoutInspections = equipment.filter(eq => 
@@ -677,6 +681,19 @@ const InspectionList = ({ inspections, equipment, onDelete, onAddInspection, onE
     if (window.confirm('Sind Sie sicher, dass Sie diese Prüfung löschen möchten?')) {
       onDelete(id);
     }
+  };
+
+  const handleShowImages = (equipmentId: string) => {
+    const equipmentItem = equipment.find(eq => eq.id === equipmentId);
+    if (equipmentItem) {
+      setSelectedEquipmentForImages(equipmentItem);
+      setIsImageModalOpen(true);
+    }
+  };
+
+  const handleCloseImageModal = () => {
+    setIsImageModalOpen(false);
+    setSelectedEquipmentForImages(null);
   };
 
   return (
@@ -963,6 +980,13 @@ const InspectionList = ({ inspections, equipment, onDelete, onAddInspection, onE
                       <td className="py-4 px-2">
                         <div className="flex space-x-1 min-w-0 justify-start">
                           <button
+                            onClick={() => handleShowImages(inspection.equipmentId)}
+                            className="btn-modern btn-primary p-1.5 flex-shrink-0 min-w-[32px] h-8"
+                            title="Gerätebilder anzeigen"
+                          >
+                            <Image className="h-3 w-3" />
+                          </button>
+                          <button
                             onClick={() => onEditInspection(inspection)}
                             className="btn-modern btn-secondary p-1.5 flex-shrink-0 min-w-[32px] h-8"
                             title="Bearbeiten"
@@ -1078,6 +1102,15 @@ const InspectionList = ({ inspections, equipment, onDelete, onAddInspection, onE
           </div>
         )}
       </div>
+
+      {/* Image Gallery Modal */}
+      {selectedEquipmentForImages && (
+        <ImageGalleryModal
+          equipment={selectedEquipmentForImages}
+          isOpen={isImageModalOpen}
+          onClose={handleCloseImageModal}
+        />
+      )}
     </div>
   );
 };
