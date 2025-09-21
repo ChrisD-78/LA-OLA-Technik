@@ -180,7 +180,7 @@ const InspectionList: React.FC<InspectionListProps> = ({ inspections, equipment,
           </div>
         </div>
       ) : (
-        <div className="card">
+        <div className="card max-w-[91%] mx-auto">
           <div className="overflow-x-auto">
             <table className="table">
               <thead>

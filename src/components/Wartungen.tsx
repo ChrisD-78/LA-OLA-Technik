@@ -200,7 +200,7 @@ const Wartungen: React.FC<WartungenProps> = ({ inspections, equipment, onDelete,
       </div>
 
       {/* Wartungen Table */}
-      <div className="card-modern overflow-hidden">
+      <div className="card-modern overflow-hidden max-w-[91%] mx-auto">
         <div className="overflow-x-auto">
           <table className="table-modern w-full">
             <thead>
@@ -275,17 +275,17 @@ const Wartungen: React.FC<WartungenProps> = ({ inspections, equipment, onDelete,
                         )}
                       </td>
                       <td className="py-4 px-4">
-                        <div className="flex space-x-2">
+                        <div className="flex space-x-2 justify-start">
                           <button
                             onClick={() => navigate(`/inspections/edit/${wartung.id}`)}
-                            className="btn-modern btn-secondary p-2"
+                            className="btn-modern btn-secondary p-2 min-w-[36px] h-9"
                             title="Bearbeiten"
                           >
                             <Edit className="h-4 w-4" />
                           </button>
                           <button
                             onClick={() => handleDelete(wartung.id)}
-                            className="btn-modern btn-danger p-2"
+                            className="btn-modern btn-danger p-2 min-w-[36px] h-9"
                             title="Löschen"
                           >
                             <Trash2 className="h-4 w-4" />
