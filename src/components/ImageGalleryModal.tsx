@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { X, ChevronLeft, ChevronRight, Image as ImageIcon } from 'lucide-react';
-import { Equipment, EquipmentImage } from '../types';
+import { Equipment } from '../types';
 
 interface ImageGalleryModalProps {
   equipment: Equipment;
