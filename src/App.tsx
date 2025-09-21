@@ -777,16 +777,16 @@ const InspectionList = ({ inspections, equipment, onDelete, onAddInspection, onE
           <table className="table-modern w-full" style={{ minWidth: '1400px' }}>
             <thead className="bg-gray-50">
               <tr>
-                <th className="text-left py-4 px-2 font-semibold text-gray-900">InventarNr</th>
-                <th className="text-left py-4 px-2 font-semibold text-gray-900">Gerät</th>
-                <th className="text-left py-4 px-2 font-semibold text-gray-900">Typ</th>
-                <th className="text-left py-4 px-2 font-semibold text-gray-900">Geplant für</th>
-                <th className="text-left py-4 px-2 font-semibold text-gray-900">Prüfer</th>
-                <th className="text-left py-4 px-2 font-semibold text-gray-900">Intervall</th>
-                <th className="text-left py-4 px-2 font-semibold text-gray-900">Status</th>
-                <th className="text-left py-4 px-2 font-semibold text-gray-900">Ergebnis</th>
-                <th className="text-left py-4 px-2 font-semibold text-gray-900">Dokumente</th>
-                <th className="text-left py-4 px-2 font-semibold text-gray-900">Aktionen</th>
+                <th className="text-left py-4 px-2 font-semibold text-gray-900" style={{ position: 'sticky', top: 0, zIndex: 10, backgroundColor: 'rgba(249, 250, 251, 0.95)', backdropFilter: 'blur(10px)', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)' }}>InventarNr</th>
+                <th className="text-left py-4 px-2 font-semibold text-gray-900" style={{ position: 'sticky', top: 0, zIndex: 10, backgroundColor: 'rgba(249, 250, 251, 0.95)', backdropFilter: 'blur(10px)', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)' }}>Gerät</th>
+                <th className="text-left py-4 px-2 font-semibold text-gray-900" style={{ position: 'sticky', top: 0, zIndex: 10, backgroundColor: 'rgba(249, 250, 251, 0.95)', backdropFilter: 'blur(10px)', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)' }}>Typ</th>
+                <th className="text-left py-4 px-2 font-semibold text-gray-900" style={{ position: 'sticky', top: 0, zIndex: 10, backgroundColor: 'rgba(249, 250, 251, 0.95)', backdropFilter: 'blur(10px)', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)' }}>Geplant für</th>
+                <th className="text-left py-4 px-2 font-semibold text-gray-900" style={{ position: 'sticky', top: 0, zIndex: 10, backgroundColor: 'rgba(249, 250, 251, 0.95)', backdropFilter: 'blur(10px)', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)' }}>Prüfer</th>
+                <th className="text-left py-4 px-2 font-semibold text-gray-900" style={{ position: 'sticky', top: 0, zIndex: 10, backgroundColor: 'rgba(249, 250, 251, 0.95)', backdropFilter: 'blur(10px)', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)' }}>Intervall</th>
+                <th className="text-left py-4 px-2 font-semibold text-gray-900" style={{ position: 'sticky', top: 0, zIndex: 10, backgroundColor: 'rgba(249, 250, 251, 0.95)', backdropFilter: 'blur(10px)', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)' }}>Status</th>
+                <th className="text-left py-4 px-2 font-semibold text-gray-900" style={{ position: 'sticky', top: 0, zIndex: 10, backgroundColor: 'rgba(249, 250, 251, 0.95)', backdropFilter: 'blur(10px)', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)' }}>Ergebnis</th>
+                <th className="text-left py-4 px-2 font-semibold text-gray-900" style={{ position: 'sticky', top: 0, zIndex: 10, backgroundColor: 'rgba(249, 250, 251, 0.95)', backdropFilter: 'blur(10px)', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)' }}>Dokumente</th>
+                <th className="text-left py-4 px-2 font-semibold text-gray-900" style={{ position: 'sticky', top: 0, zIndex: 10, backgroundColor: 'rgba(249, 250, 251, 0.95)', backdropFilter: 'blur(10px)', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)' }}>Aktionen</th>
               </tr>
             </thead>
             <tbody>

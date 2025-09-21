@@ -185,13 +185,13 @@ const InspectionList: React.FC<InspectionListProps> = ({ inspections, equipment,
             <table className="table min-w-[1200px] w-max">
               <thead>
                 <tr>
-                  <th>Gerät</th>
-                  <th>Typ</th>
-                  <th>Geplant für</th>
-                  <th>Prüfer</th>
-                  <th>Status</th>
-                  <th>Ergebnis</th>
-                  <th>Aktionen</th>
+                  <th style={{ position: 'sticky', top: 0, zIndex: 10, backgroundColor: 'rgba(249, 250, 251, 0.95)', backdropFilter: 'blur(10px)', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)' }}>Gerät</th>
+                  <th style={{ position: 'sticky', top: 0, zIndex: 10, backgroundColor: 'rgba(249, 250, 251, 0.95)', backdropFilter: 'blur(10px)', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)' }}>Typ</th>
+                  <th style={{ position: 'sticky', top: 0, zIndex: 10, backgroundColor: 'rgba(249, 250, 251, 0.95)', backdropFilter: 'blur(10px)', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)' }}>Geplant für</th>
+                  <th style={{ position: 'sticky', top: 0, zIndex: 10, backgroundColor: 'rgba(249, 250, 251, 0.95)', backdropFilter: 'blur(10px)', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)' }}>Prüfer</th>
+                  <th style={{ position: 'sticky', top: 0, zIndex: 10, backgroundColor: 'rgba(249, 250, 251, 0.95)', backdropFilter: 'blur(10px)', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)' }}>Status</th>
+                  <th style={{ position: 'sticky', top: 0, zIndex: 10, backgroundColor: 'rgba(249, 250, 251, 0.95)', backdropFilter: 'blur(10px)', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)' }}>Ergebnis</th>
+                  <th style={{ position: 'sticky', top: 0, zIndex: 10, backgroundColor: 'rgba(249, 250, 251, 0.95)', backdropFilter: 'blur(10px)', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)' }}>Aktionen</th>
                 </tr>
               </thead>
               <tbody>
