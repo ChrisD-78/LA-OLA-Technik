@@ -774,8 +774,8 @@ const InspectionList = ({ inspections, equipment, onDelete, onAddInspection, onE
       {/* Tabelle mit allen Prüfungen */}
       <div className="card-modern max-w-[98%] mx-auto">
         {/* Fixer Header */}
-        <div className="bg-gray-50 border-b-2 border-gray-300">
-          <table className="table-modern w-full table-fixed">
+        <div className="bg-gray-50 border-b-2 border-gray-300 overflow-x-auto">
+          <table className="table-modern w-full min-w-[1200px]">
             <colgroup>
               <col className="w-[9%]" />
               <col className="w-[15%]" />
@@ -807,7 +807,7 @@ const InspectionList = ({ inspections, equipment, onDelete, onAddInspection, onE
         
         {/* Scrollbarer Body */}
         <div style={{ height: '400px', overflowY: 'auto', overflowX: 'auto' }}>
-          <table className="table-modern w-full table-fixed">
+          <table className="table-modern w-full min-w-[1200px]">
             <colgroup>
               <col className="w-[9%]" />
               <col className="w-[15%]" />

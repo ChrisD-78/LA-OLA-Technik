@@ -182,7 +182,7 @@ const InspectionList: React.FC<InspectionListProps> = ({ inspections, equipment,
       ) : (
         <div className="card max-w-[98%] mx-auto">
           <div className="overflow-x-auto">
-            <table className="table">
+            <table className="table min-w-[1000px]">
               <thead>
                 <tr>
                   <th>Gerät</th>
