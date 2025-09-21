@@ -296,8 +296,14 @@ body {
   text-overflow: ellipsis;
 }
 
-/* Sticky Table Headers */
-.table-container thead th {
+/* Sticky Table Headers - Universelle Lösung */
+.table-container th,
+.table-container thead th,
+.table th,
+.table thead th,
+.table-modern th,
+.table-modern thead th,
+thead th {
   position: sticky !important;
   top: 0 !important;
   z-index: 10 !important;
@@ -307,19 +313,18 @@ body {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
 }
 
-/* Sticky Headers für verschiedene Tabellen-Typen */
-.table thead th {
+/* Zusätzliche Sticky-Header für spezielle Klassen */
+.bg-gray-50 th,
+.bg-gray-50 thead th {
   position: sticky !important;
   top: 0 !important;
   z-index: 10 !important;
   background: rgba(249, 250, 251, 0.95) !important;
   backdrop-filter: blur(10px) !important;
-  border-bottom: 2px solid rgba(209, 213, 219, 0.3) !important;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
 }
 
-/* Zusätzliche Sticky-Header für bg-gray-50 Klassen */
-.bg-gray-50 th {
+/* Sicherstellen, dass alle th-Elemente in Tabellen sticky sind */
+table th {
   position: sticky !important;
   top: 0 !important;
   z-index: 10 !important;
