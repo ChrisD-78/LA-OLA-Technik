@@ -50,7 +50,10 @@ const Dashboard: React.FC<DashboardProps> = ({ equipment, inspections }) => {
   return (
     <div>
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
+        <h1 className="text-3xl font-bold text-gray-900">
+          🏊‍♂️ LA OLA Technik Dashboard 
+          <span className="text-sm text-blue-600 ml-4">🔄 Auto-Deploy</span>
+        </h1>
         <div className="flex space-x-4">
           <Link to="/equipment/new" className="btn btn-primary">
             <Plus className="h-4 w-4" />
